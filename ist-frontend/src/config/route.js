@@ -114,7 +114,7 @@ const routes = [
         }
       },
       {
-        path: '/query',
+        path: '/data-maintain',
         // component: <DataMapPage/>,
         label: '数据资产维护',
         meta: {
