@@ -89,6 +89,26 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: '/data-asset-management',
+    label: '数据资产管理',
+    meta: {
+      icon: <MoneyCollectOutlined/>
+    },
+    children: [
+      {
+        path: '/map',
+        // component: <DataMapPage/>,
+        label: '数据地图',
+        meta: {
+          icon: <ShareAltOutlined/>
+        }
+      },
+      {
+
+      }
+    ]
   }
 ]
 
