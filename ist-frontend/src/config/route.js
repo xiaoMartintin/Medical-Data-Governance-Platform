@@ -2,10 +2,10 @@ import {
   CloudOutlined,
   DatabaseFilled,
   DotChartOutlined,
-  FileSearchOutlined,
+  FileSearchOutlined, GlobalOutlined, LineChartOutlined,
   MergeCellsOutlined,
-  MoneyCollectOutlined,
-  RobotOutlined, ShareAltOutlined
+  MoneyCollectOutlined, MonitorOutlined,
+  RobotOutlined, SearchOutlined, ShareAltOutlined
 } from '@ant-design/icons'
 
 const routes = [
@@ -98,15 +98,44 @@ const routes = [
     },
     children: [
       {
+        path: '/overall',
+        // component: <DataMapPage/>,
+        label: '资产全景',
+        meta: {
+          icon: <GlobalOutlined />
+        }
+      },
+      {
+        path: '/query',
+        // component: <DataMapPage/>,
+        label: '资产查询',
+        meta: {
+          icon: <SearchOutlined />
+        }
+      },
+      {
+        path: '/query',
+        // component: <DataMapPage/>,
+        label: '数据资产维护',
+        meta: {
+          icon: <MonitorOutlined />
+        }
+      },
+      {
         path: '/map',
         // component: <DataMapPage/>,
-        label: '数据地图',
+        label: '资产地图',
         meta: {
           icon: <ShareAltOutlined/>
         }
       },
       {
-
+        path: '/statistic',
+        // component: <DataMapPage/>,
+        label: '资产统计',
+        meta: {
+          icon: <LineChartOutlined />
+        }
       }
     ]
   }
