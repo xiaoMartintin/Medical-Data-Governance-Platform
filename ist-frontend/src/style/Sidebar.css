@@ -1,0 +1,24 @@
+.sider-logo-text {
+    font-size: 18px;
+    font-weight: bolder;
+    color: white;
+    margin-left: 8px;
+    transition: font-size 0.15s ease-in-out, margin-left 0.1s ease-in-out;
+}
+
+.ant-layout-sider-collapsed .sider-logo-text {
+    margin-left: 0;
+    font-size: 0;
+}
+
+.sider-logo {
+    width: 36px;
+    height: 36px;
+    transition: width 0.1s ease-in-out, height 0.1s ease-in-out;
+}
+
+
+.ant-layout-sider-collapsed .sider-logo {
+    width: 24px;
+    height: 24px;
+}
