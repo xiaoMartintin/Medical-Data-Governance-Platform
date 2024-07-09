@@ -1,0 +1,58 @@
+.source-connection {
+    margin: 20px;
+}
+
+.empty-data-source {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-buttons .ant-btn {
+    border: none;
+    background: transparent;
+    color: #1890ff;
+}
+
+.icon-buttons .ant-btn:hover {
+    color: #40a9ff;
+}
+
+.ant-table {
+    margin-top: 20px;
+}
+
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+    text-align: left;  /* 修改为左对齐 */
+}
+
+.ant-table-thead > tr > th {
+    background-color: #f5f5f5;
+}
+
+.ant-table-tbody > tr > td {
+    background-color: #fff;
+}
+
+.action-button {
+    color: #1890ff;
+}
+
+.action-button:hover {
+    color: #40a9ff;
+}
+
+.ant-table-tbody > tr.selected-row > td {
+    background-color: #e6f7ff;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
