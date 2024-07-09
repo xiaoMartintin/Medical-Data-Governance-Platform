@@ -95,6 +95,15 @@ const DataStandardPage = () => {
     setType(value)
   }
 
+  const handleSave = () => {
+    if (dataStandard.name === '' || dataStandard.fields.length === 0) {
+      message.error('请完整定义后保存')
+    }
+    else {
+      console.log('Saving Data Standard:', dataStandard)
+    }
+  }
+
   const columns = [
     {
       title: '字段名',
@@ -133,10 +142,10 @@ const DataStandardPage = () => {
       render: (_, record, index) => (
         <>
           <Button type="link" onClick={() => handleEditField(record, index)}>
-            <EditOutlined /> Edit
+            <EditOutlined /> 编辑
           </Button>
           <Button type="link" danger onClick={() => handleDeleteField(index)}>
-            <DeleteOutlined /> Delete
+            <DeleteOutlined /> 删除
           </Button>
         </>
       ),
@@ -239,7 +248,7 @@ const DataStandardPage = () => {
         </Form>
       </Modal>
 
-      <Button onClick={() => console.log('Saving Data Standard:', dataStandard)} style={{ marginTop: '20px' }}>
+      <Button onClick={handleSave} style={{ marginTop: '20px' }}>
         保存数据标准
       </Button>
     </div>

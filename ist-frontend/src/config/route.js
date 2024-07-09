@@ -1,12 +1,14 @@
 import {
-  CloudOutlined,
-  DatabaseFilled,
-  DotChartOutlined,
+  FileAddOutlined,
   MergeCellsOutlined,
-  FilePdfOutlined
+  FilePdfOutlined,
+  SettingOutlined,
+  BranchesOutlined,
+  FileTextOutlined
 } from '@ant-design/icons'
 import PDFPage from '../pages/PDFPage'
 import DataStandardPage from '../pages/DatastandardPage'
+import DataStandardManagementPage from '../pages/DataStandardManagementPage'
 
 const routes = [
   {
@@ -21,7 +23,7 @@ const routes = [
         component: <DataStandardPage />,
         label: '数据标准手工定义',
         meta: {
-          icon: <DatabaseFilled />
+          icon: <FileAddOutlined />
         }
       },
       {
@@ -29,22 +31,22 @@ const routes = [
         //component: <DataModelDetailPage/>,
         label: '数据标准版本管理',
         meta: {
-          icon: <DatabaseFilled />
+          icon: <BranchesOutlined />
         }
       },
       {
         path: '/maintain',
-        //component: <DataSourcePage/>,
+        component: <DataStandardManagementPage />,
         label: '数据标准维护',
         meta: {
-          icon: <DotChartOutlined />
+          icon: <SettingOutlined />
         }
       },
       {
         path: '/document',
         label: '接口文档生成',
         meta: {
-          icon: <DatabaseFilled />
+          icon: <FileTextOutlined />
         }
       }
     ],
