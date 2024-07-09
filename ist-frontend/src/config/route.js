@@ -2,11 +2,11 @@ import {
   CloudOutlined,
   DatabaseFilled,
   DotChartOutlined,
-  FileSearchOutlined,
   MergeCellsOutlined,
-  MoneyCollectOutlined,
-  RobotOutlined, ShareAltOutlined
+  FilePdfOutlined
 } from '@ant-design/icons'
+import PDFPage from '../pages/PDFPage'
+import DataStandardPage from '../pages/DatastandardPage'
 
 const routes = [
   {
@@ -18,7 +18,7 @@ const routes = [
     children: [
       {
         path: '/human',
-        //component: <DataModelPage/>,
+        component: <DataStandardPage />,
         label: '数据标准手工定义',
         meta: {
           icon: <DatabaseFilled />
@@ -52,43 +52,44 @@ const routes = [
   {
     path: '/pdf-analysis',
     label: 'PDF解析',
+    component: <PDFPage />,
     meta: {
-      icon: <CloudOutlined />
+      icon: <FilePdfOutlined />
     },
-    children: [
-      {
-        path: '/text',
-        //component: <DataAssetPage />,
-        label: '文本解析',
-        meta: {
-          icon: <MoneyCollectOutlined />
-        }
-      },
-      {
-        path: '/picture',
-        //component: <DataMapPage />,
-        label: '图片OCR解析',
-        meta: {
-          icon: <ShareAltOutlined />
-        }
-      },
-      {
-        path: '/edit',
-        //component: <ModelSimilarityPage />,
-        label: '解析结果编辑与确认',
-        meta: {
-          icon: <FileSearchOutlined />
-        }
-      },
-      {
-        path: '/multi',
-        //component: <LLMChatPage />,
-        label: 'PDF批量解析',
-        meta: {
-          icon: <RobotOutlined />
-        }
-      }
-    ]
+    // children: [
+    //   {
+    //     path: '/text',
+    //     component: <PDFPage />,
+    //     label: '文本解析',
+    //     meta: {
+    //       icon: <MoneyCollectOutlined />
+    //     }
+    //   },
+    //   {
+    //     path: '/picture',
+    //     //component: <DataMapPage />,
+    //     label: '图片OCR解析',
+    //     meta: {
+    //       icon: <ShareAltOutlined />
+    //     }
+    //   },
+    //   {
+    //     path: '/edit',
+    //     //component: <ModelSimilarityPage />,
+    //     label: '解析结果编辑与确认',
+    //     meta: {
+    //       icon: <FileSearchOutlined />
+    //     }
+    //   },
+    //   {
+    //     path: '/multi',
+    //     //component: <LLMChatPage />,
+    //     label: 'PDF批量解析',
+    //     meta: {
+    //       icon: <RobotOutlined />
+    //     }
+    //   }
+    // ]
   }
 ]
 
