@@ -295,9 +295,10 @@ const DataStandardManagementPage = () => {
           versionDescription: values.versionDescription,
         }
         const newStandards = [...dataIndeed, newStandard]
-        setCurrentStandard(newStandard)
         setDataStandards(newStandards)
         setDataIndeed(newStandards)
+        setCurrentStandard(null)
+        setCurrentStandardIndex(-1)
         setIsVersionModalVisible(false)
         message.success(`成功保存至版本${values.version}`)
       })
@@ -308,6 +309,8 @@ const DataStandardManagementPage = () => {
 
   const handleSave = () => {
     setDataIndeed(dataStandards)
+    setCurrentStandard(null)
+    setCurrentStandardIndex(-1)
     message.success("成功保存至当前版本")
   }
 
@@ -324,7 +327,7 @@ const DataStandardManagementPage = () => {
       title: '确认取消',
       content: '您确定要取消吗？未保存的更改将会丢失。',
       onOk () {
-        setDataStandards(initialDataStandards)
+        setDataStandards(dataIndeed)
         setCurrentStandard(null)
         setCurrentStandardIndex(-1)
         setView(false)
