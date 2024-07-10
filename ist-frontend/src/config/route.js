@@ -9,6 +9,7 @@ import {
 import PDFPage from '../pages/PDFPage'
 import DataStandardPage from '../pages/DatastandardPage'
 import DataStandardManagementPage from '../pages/DataStandardManagementPage'
+import InterfaceDocPage from '../pages/InterfaceDocPage'
 
 const routes = [
   {
@@ -37,6 +38,7 @@ const routes = [
       {
         path: '/document',
         label: '接口文档生成',
+        component: <InterfaceDocPage />,
         meta: {
           icon: <FileTextOutlined />
         }
