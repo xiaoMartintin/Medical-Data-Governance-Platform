@@ -1,21 +1,39 @@
-import React, { useState } from 'react'
-import { Form, Input, Button, Table, Modal, Select, Switch, InputNumber, message } from 'antd'
-import { PlusOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import React, { useState, useEffect } from 'react'
+import { Form, Input, Button, Table, Modal, Select, Switch, InputNumber, message, Space } from 'antd'
+import { PlusOutlined, DeleteOutlined, EditOutlined, EyeOutlined, SaveOutlined, SearchOutlined } from '@ant-design/icons'
 
 const { Option } = Select
+const { confirm } = Modal
 
 const initialDataStandards = [
   {
+    uuid: '1234567890',
     name: 'Standard 1',
     description: 'Description for Standard 1',
+    version: '1.0',
+    versionDescription: 'Initial version',
     fields: [
       { name: 'Field 1', type: 'varchar', allowNull: false, length: 255, description: 'Description for Field 1' },
       { name: 'Field 2', type: 'integer', allowNull: true, length: 4, description: 'Description for Field 2' },
     ],
   },
   {
+    uuid: '1234567890',
+    name: 'Standard 1',
+    description: 'Description for Standard 1',
+    version: '1.1',
+    versionDescription: 'Minor Update',
+    fields: [
+      { name: 'Field 1', type: 'varchar', allowNull: false, length: 255, description: 'Update Field 1' },
+      { name: 'Field 2', type: 'integer', allowNull: true, length: 4, description: 'Update Field 2' },
+    ],
+  },
+  {
+    uuid: '0987654321',
     name: 'Standard 2',
     description: 'Description for Standard 2',
+    version: '1.0',
+    versionDescription: 'Initial version',
     fields: [
       { name: 'Field A', type: 'char', allowNull: false, length: 100, description: 'Description for Field A' },
       { name: 'Field B', type: 'boolean', allowNull: true, length: 1, description: 'Description for Field B' },
@@ -23,8 +41,28 @@ const initialDataStandards = [
   },
 ]
 
+function deepEqual (obj1, obj2) {
+  if (obj1 === obj2)
+    return true
+  if (typeof obj1 !== 'object' || typeof obj2 !== 'object') {
+    return false
+  }
+  let keys1 = Object.keys(obj1)
+  let keys2 = Object.keys(obj2)
+  if (keys1.length !== keys2.length) {
+    return false
+  }
+  for (let key of keys1) {
+    if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+      return false
+    }
+  }
+  return true
+}
+
 const DataStandardManagementPage = () => {
   const [dataStandards, setDataStandards] = useState(initialDataStandards)
+  const [dataIndeed, setDataIndeed] = useState(initialDataStandards)
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [fieldForm] = Form.useForm()
   const [currentStandard, setCurrentStandard] = useState(null)
@@ -33,25 +71,104 @@ const DataStandardManagementPage = () => {
   const [isEditingField, setIsEditingField] = useState(false)
   const [editingFieldIndex, setEditingFieldIndex] = useState(-1)
   const [isStandardModalVisible, setIsStandardModalVisible] = useState(false)
+  const [isVersionModalVisible, setIsVersionModalVisible] = useState(false)
   const [standardForm] = Form.useForm()
+  const [versionForm] = Form.useForm()
   const [view, setView] = useState(false)
+  const [searchText, setSearchText] = useState('')
+  const [searchedColumn, setSearchedColumn] = useState('')
+
+  useEffect(() => {
+    // Delay to ensure component is fully rendered
+    const timeout = setTimeout(() => {
+      const inputElement = document.getElementById(`${searchedColumn}-search-input`)
+      if (inputElement) {
+        inputElement.select()
+      }
+    }, 100)
+
+    return () => clearTimeout(timeout)
+  }, [searchedColumn])
+  const getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          id={`${dataIndex}-search-input`} // Ensure unique id for each input
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : '',
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setSearchedColumn(dataIndex)
+      }
+    },
+  })
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm()
+    setSearchText(selectedKeys[0])
+    setSearchedColumn(dataIndex)
+  }
+
+  const handleReset = clearFilters => {
+    clearFilters()
+    setSearchText('')
+  }
 
   const handleEditStandard = (record, index) => {
+    if (!deepEqual(currentStandard, dataIndeed[currentStandardIndex]) && currentStandard !== null && currentStandardIndex !== -1 && currentStandardIndex !== index) {
+      message.error("请先保存当前数据标准的更改")
+      return
+    }
     setCurrentStandard(record)
     setCurrentStandardIndex(index)
     setIsStandardModalVisible(true)
+    setView(true)
     standardForm.setFieldsValue(record)
   }
 
   const handleDeleteStandard = (index) => {
+    if (!deepEqual(currentStandard, dataIndeed[currentStandardIndex]) && currentStandard !== null && currentStandardIndex !== -1 && currentStandardIndex !== index) {
+      message.error("请先保存当前数据标准的更改")
+      return
+    }
     const newStandards = [...dataStandards]
     newStandards.splice(index, 1)
     setDataStandards(newStandards)
+    setDataIndeed(newStandards)
     setCurrentStandard(null)
-    message.success('Data standard deleted successfully')
+    setCurrentStandardIndex(-1)
+    message.success('数据标准删除成功')
   }
 
   const handleViewFields = (record, index) => {
+    if (!deepEqual(currentStandard, dataIndeed[currentStandardIndex]) && currentStandard !== null && currentStandardIndex !== -1 && currentStandardIndex !== index) {
+      message.error("请先保存当前数据标准的更改")
+      return
+    }
     setCurrentStandard(record)
     setCurrentStandardIndex(index)
     setView(true)
@@ -61,11 +178,13 @@ const DataStandardManagementPage = () => {
     standardForm.validateFields()
       .then(values => {
         const newStandards = [...dataStandards]
-        newStandards[currentStandardIndex] = {
+        const newStandard = {
           ...currentStandard,
           name: values.name,
           description: values.description,
         }
+        newStandards[currentStandardIndex] = newStandard
+        setCurrentStandard(newStandard)
         setDataStandards(newStandards)
         setIsStandardModalVisible(false)
       })
@@ -157,6 +276,7 @@ const DataStandardManagementPage = () => {
     }
     const newStandards = [...dataStandards]
     newStandards[currentStandardIndex] = newStandard
+    setCurrentStandard(newStandard)
     setDataStandards(newStandards)
     message.success('Field deleted successfully')
   }
@@ -166,16 +286,82 @@ const DataStandardManagementPage = () => {
     setType(value)
   }
 
+  const handleSaveVersion = () => {
+    versionForm.validateFields()
+      .then(values => {
+        const newStandard = {
+          ...currentStandard,
+          version: values.version,
+          versionDescription: values.versionDescription,
+        }
+        const newStandards = [...dataIndeed, newStandard]
+        setCurrentStandard(newStandard)
+        setDataStandards(newStandards)
+        setDataIndeed(newStandards)
+        setIsVersionModalVisible(false)
+        message.success(`成功保存至版本${values.version}`)
+      })
+      .catch(errorInfo => {
+        console.log('Validate Failed:', errorInfo)
+      })
+  }
+
+  const handleSave = () => {
+    setDataIndeed(dataStandards)
+    message.success("成功保存至当前版本")
+  }
+
+  const handleSave_new = () => {
+    setIsVersionModalVisible(true)
+    versionForm.setFieldsValue({
+      version: currentStandard.version,
+      versionDescription: currentStandard.versionDescription,
+    })
+  }
+
+  const handleCancel = () => {
+    confirm({
+      title: '确认取消',
+      content: '您确定要取消吗？未保存的更改将会丢失。',
+      onOk () {
+        setDataStandards(initialDataStandards)
+        setCurrentStandard(null)
+        setCurrentStandardIndex(-1)
+        setView(false)
+      },
+    })
+  }
+
   const columns = [
+    {
+      title: '唯一ID',
+      dataIndex: 'uuid',
+      key: 'uuid',
+      sorter: (a, b) => a.uuid.localeCompare(b.uuid),
+      sortDirections: ['descend', 'ascend'],
+    },
     {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
+      ...getColumnSearchProps('name'),
     },
     {
       title: '描述',
       dataIndex: 'description',
       key: 'description',
+    },
+    {
+      title: '版本号',
+      dataIndex: 'version',
+      key: 'version',
+      sorter: (a, b) => a.version.localeCompare(b.version),
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: '版本描述',
+      dataIndex: 'versionDescription',
+      key: 'versionDescription',
     },
     {
       title: '操作',
@@ -246,7 +432,7 @@ const DataStandardManagementPage = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>维护数据标准</h1>
+      <h1>数据标准管理</h1>
 
       <Table
         dataSource={dataStandards}
@@ -255,6 +441,7 @@ const DataStandardManagementPage = () => {
         bordered
         rowKey={(record, index) => index.toString()}
         style={{ marginTop: '20px' }}
+
       />
 
       <Modal
@@ -267,7 +454,7 @@ const DataStandardManagementPage = () => {
           <Form.Item
             name="name"
             label="数据标准名称"
-            rules={[{ required: true, message: 'Please enter data standard name' }]}
+            rules={[{ required: true, message: '请输入数据标准名称' }]}
           >
             <Input />
           </Form.Item>
@@ -283,6 +470,9 @@ const DataStandardManagementPage = () => {
       {currentStandard && view && (
         <>
           <h2>编辑数据标准字段: {currentStandard.name}</h2>
+          <Button icon={<PlusOutlined />} onClick={handleAddField} style={{ marginTop: '5px' }}>
+            增加字段
+          </Button>
           <Table
             dataSource={currentStandard.fields}
             columns={fieldColumns}
@@ -291,14 +481,22 @@ const DataStandardManagementPage = () => {
             rowKey={(record, index) => index.toString()}
             style={{ marginTop: '20px' }}
           />
-          <Button icon={<PlusOutlined />} onClick={handleAddField} style={{ marginTop: '20px' }}>
-            增加字段
+          <Button icon={<SaveOutlined />} onClick={handleSave} style={{ marginTop: '20px', marginLeft: '10px' }}>
+            保存为当前版本
+          </Button>
+
+          <Button icon={<SaveOutlined />} onClick={handleSave_new} style={{ marginTop: '20px', marginLeft: '10px' }}>
+            保存为新版本
+          </Button>
+
+          <Button icon={<DeleteOutlined />} onClick={handleCancel} style={{ marginTop: '20px', marginLeft: '10px' }}>
+            取消
           </Button>
         </>
       )}
 
       <Modal
-        title={isEditingField ? "Edit Field" : "Add Field"}
+        title={isEditingField ? "编辑字段" : "增加字段"}
         visible={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
@@ -347,6 +545,30 @@ const DataStandardManagementPage = () => {
           >
             {type === 'char' || type === 'varchar' ?
               <InputNumber min={1} /> : <InputNumber min={1} disabled />}
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title="保存版本信息"
+        visible={isVersionModalVisible}
+        onOk={handleSaveVersion}
+        onCancel={() => setIsVersionModalVisible(false)}
+      >
+        <Form form={versionForm} layout="vertical">
+          <Form.Item
+            name="version"
+            label="版本号"
+            rules={[{ required: true, message: 'Please enter version number' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="versionDescription"
+            label="版本描述"
+            rules={[{ required: true, message: 'Please enter version description' }]}
+          >
+            <Input.TextArea />
           </Form.Item>
         </Form>
       </Modal>

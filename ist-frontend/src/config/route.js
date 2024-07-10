@@ -27,14 +27,6 @@ const routes = [
         }
       },
       {
-        path: '/vision',
-        //component: <DataModelDetailPage/>,
-        label: '数据标准版本管理',
-        meta: {
-          icon: <BranchesOutlined />
-        }
-      },
-      {
         path: '/maintain',
         component: <DataStandardManagementPage />,
         label: '数据标准维护',

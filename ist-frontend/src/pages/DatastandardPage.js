@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, version } from 'react'
 import { Form, Input, Button, Table, Modal, Select, Switch, InputNumber, message } from 'antd'
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
@@ -6,8 +6,11 @@ const { Option } = Select
 
 const DataStandardPage = () => {
   const [dataStandard, setDataStandard] = useState({
+    uid: '',
     name: '',
     description: '',
+    version: '1.0',
+    versionDescription: 'Initial Version',
     fields: [],
   })
   const [fieldForm] = Form.useForm()
@@ -159,7 +162,7 @@ const DataStandardPage = () => {
         <Form.Item
           name="name"
           label="数据标准名称"
-          rules={[{ required: true, message: 'Please enter data standard name' }]}
+          rules={[{ required: true, message: '请输入数据标准名称' }]}
         >
           <Input onChange={(e) => {
             setDataStandard({
@@ -171,11 +174,36 @@ const DataStandardPage = () => {
         <Form.Item
           name="description"
           label="数据标准描述"
+          rules={[{ required: true, message: '请添加数据标准描述' }]}
         >
           <Input.TextArea onChange={(e) => {
             setDataStandard({
               ...dataStandard,
               description: e.target.value,
+            })
+          }} />
+        </Form.Item>
+        <Form.Item
+          name="version"
+          label="初始版本号"
+          rules={[{ required: true, message: '请输入初始版本号' }]}
+        >
+          <Input defaultValue="1.0" onChange={(e) => {
+            setDataStandard({
+              ...dataStandard,
+              version: e.target.value,
+            })
+          }} />
+        </Form.Item>
+        <Form.Item
+          name="versionDescription"
+          label="初始版本描述"
+          rules={[{ required: true, message: '请输入初始版本描述' }]}
+        >
+          <Input.TextArea defaultValue="Initial Version" onChange={(e) => {
+            setDataStandard({
+              ...dataStandard,
+              versionDescription: e.target.value,
             })
           }} />
         </Form.Item>
