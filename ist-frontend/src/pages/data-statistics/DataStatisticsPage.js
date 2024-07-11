@@ -133,7 +133,7 @@ class DataStatisticsPage extends React.Component{
                     </div>
                     <Divider/>
                     <div className="Bottom_Container" style={{ flex: 1 }}>
-                        <h3>仅展示前100条数据资产</h3>
+                        <h3>仅展示前<text style={{color:'rgb(19,189,149)'}}>100</text>条数据资产</h3>
                        <Table columns={columns}
                               dataSource={this.state.dataAssets.slice(0,100)}
                               rowKey="id"
