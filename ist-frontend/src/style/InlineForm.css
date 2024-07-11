@@ -1,0 +1,9 @@
+
+.inline-form > .ant-form-item {
+    margin-bottom: 16px;
+    min-width: 250px;
+}
+
+.inline-form > .ant-btn {
+    margin-right: 13px;
+}

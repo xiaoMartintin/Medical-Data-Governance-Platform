@@ -7,6 +7,9 @@ import {
   MoneyCollectOutlined, MonitorOutlined,
   RobotOutlined, SearchOutlined, ShareAltOutlined
 } from '@ant-design/icons'
+import DataAssetPage from "../pages/data-asset/DataAssetPage";
+import DataMapPage from "../pages/data-map/DataMapPage";
+import DataStatisticsPage from "../pages/data-statistics/DataStatisticsPage";
 
 const routes = [
   {
@@ -99,7 +102,7 @@ const routes = [
     children: [
       {
         path: '/overall',
-        // component: <DataMapPage/>,
+        component: <DataAssetPage/>,
         label: '资产全景',
         meta: {
           icon: <GlobalOutlined />
@@ -123,7 +126,7 @@ const routes = [
       },
       {
         path: '/map',
-        // component: <DataMapPage/>,
+        component: <DataMapPage/>,
         label: '资产地图',
         meta: {
           icon: <ShareAltOutlined/>
@@ -131,7 +134,7 @@ const routes = [
       },
       {
         path: '/statistic',
-        // component: <DataMapPage/>,
+        component: <DataStatisticsPage/>,
         label: '资产统计',
         meta: {
           icon: <LineChartOutlined />
