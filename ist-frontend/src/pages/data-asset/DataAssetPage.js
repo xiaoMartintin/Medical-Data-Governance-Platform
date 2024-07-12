@@ -7,6 +7,7 @@ import {downloadCSV} from '../../utils/methods'
 import FilterForm from './components/FilterForm'
 import {getDataAssets} from "../../apis/data-asset";
 import {formatModelModal, formatModelType} from "../data-model/methods";
+import {DataAssets, DataModels} from "../../database/data";
 
 const DataAssetPage = () => {
     const chartRef = useRef(null)
@@ -54,6 +55,7 @@ const DataAssetPage = () => {
 
     const renderChart = (data) => {
         if (!chartRef.current) return
+        console.log(data)
         chart = echarts.init(chartRef.current)
         chart.showLoading()
         chart.hideLoading()
@@ -144,12 +146,35 @@ const DataAssetPage = () => {
         Object.keys(filterParams).forEach(key => {
             params[key] = filterParams[key] === null || filterParams[key] === undefined ? '' : filterParams[key];
         });
-        getDataAssets(params).then(data => {
+        /*getDataAssets(params).then(data => {
+            console.log(data)
             const graphData = modelsToGraph(data)
             renderChart(graphData)
         }).catch(error => {
             message.error(`加载数据资产失败：${error.message}`)
         })
+        return () => {
+            chart && chart.dispose()
+        }*/
+        try {
+            let filteredGraphData
+            if (Object.values(params).every(value => value === '')) {
+                filteredGraphData = modelsToGraph(DataAssets);
+            } else {
+                filteredGraphData = DataAssets.filter(data => {
+                    for (const key in params) {
+                        if (data[key] !== params[key]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            }
+            renderChart(filteredGraphData)
+        }
+        catch (error) {
+            message.error(`加载数据资产失败：${error.message}`)
+        }
         return () => {
             chart && chart.dispose()
         }

@@ -5,6 +5,9 @@ import {getDataAssets} from "../../apis/data-asset";
 import {Divider, message, Table} from "antd";
 import config from "../data-source/config";
 import RankingChart from "./components/RankingChart";
+import {DataAssets} from "../../database/data";
+import {formatModelType} from "../data-model/methods";
+import {formatDataSourceType} from "../data-source/methods";
 const columns = [
     {
         title: '资产id',
@@ -79,7 +82,7 @@ class DataStatisticsPage extends React.Component{
             tag: ''
         }
 
-        getDataAssets(params).then(data => {
+        /*getDataAssets(params).then(data => {
             const series_data = this.getPieChartSeriesData(data)
             this.setState({
                 dataAssets:data,
@@ -94,7 +97,24 @@ class DataStatisticsPage extends React.Component{
             })
         }).catch(error => {
             message.error(`加载数据资产失败：${error.message}`).then(r =>{} )
-        })
+        })*/
+        try {
+            const series_data = this.getPieChartSeriesData(DataAssets)
+            this.setState({
+                dataAssets:DataAssets,
+                PieChart_Series:[
+                    {
+                        name: '数据源',
+                        type: 'pie',
+                        radius: '50%',
+                        data: series_data
+                    }
+                ]
+            })
+        }
+        catch (error) {
+            message.error(`加载数据资产失败：${error.message}`).then(r =>{} )
+        }
         return () => {
 
         }
@@ -143,7 +163,7 @@ class DataStatisticsPage extends React.Component{
                                           <Table
                                               columns={[
                                                   {title: '数据源id', dataIndex: 'dataSourceId'},
-                                                  {title: '类型', dataIndex: 'type'},
+                                                  {title: '类型', dataIndex: 'type',render:record => (<text>{formatDataSourceType(record)}</text>)},
                                                   {title: 'url', dataIndex: 'url'}
                                               ]}
                                               dataSource={record.dataSources}
