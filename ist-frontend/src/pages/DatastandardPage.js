@@ -119,7 +119,7 @@ const DataStandardPage = () => {
       key: 'type',
     },
     {
-      title: '允许为空？',
+      title: '允许为空',
       dataIndex: 'allowNull',
       key: 'allowNull',
       render: (text, record) => (
@@ -260,7 +260,7 @@ const DataStandardPage = () => {
           </Form.Item>
           <Form.Item
             name="allowNull"
-            label="允许为空？"
+            label="允许为空"
             valuePropName="checked"
           >
             <Switch />
