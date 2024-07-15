@@ -30,7 +30,7 @@
 
 .ant-table-thead > tr > th,
 .ant-table-tbody > tr > td {
-    text-align: left;  /* 修改为左对齐 */
+    text-align: left;
 }
 
 .ant-table-thead > tr > th {
@@ -55,4 +55,41 @@
 
 .rotate {
     transform: rotate(180deg);
+}
+
+.ant-modal-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.ant-modal-body {
+    padding: 24px;
+    font-family: Arial, sans-serif;
+}
+
+.ant-form-item {
+    margin-bottom: 16px;
+}
+
+.ant-input, .ant-select-selector {
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+}
+
+.ant-btn {
+    border-radius: 4px;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+.ant-tree .ant-tree-node-content-wrapper {
+    color: #1890ff; /* 将节点文字颜色改为蓝色 */
+}
+
+.ant-tree .ant-tree-node-content-wrapper:hover {
+    color: #40a9ff; /* 将节点在鼠标悬停时的文字颜色改为浅蓝色 */
 }

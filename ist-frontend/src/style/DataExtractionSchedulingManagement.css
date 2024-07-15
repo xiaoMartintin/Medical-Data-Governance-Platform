@@ -1,7 +1,50 @@
-.card {
+.data-extraction-scheduling-management {
     margin: 20px;
+    font-family: Arial, sans-serif;
 }
 
-.form-item {
-    margin-bottom: 15px;
+.filter-card {
+    margin-bottom: 20px;
+}
+
+.filter-card .ant-form-item {
+    margin-bottom: 10px;
+    margin-right: 20px;
+}
+
+.action-card {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.action-button {
+    margin-right: 10px;
+}
+
+.data-table {
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.ant-table-thead > tr > th {
+    background-color: #f5f5f5;
+    text-align: center;
+}
+
+.ant-table-tbody > tr > td {
+    text-align: left;
+}
+
+.ant-switch-checked {
+    background-color: #1890ff;
+}
+
+.stats-card {
+    margin-top: 20px;
+}
+
+.details-card {
+    margin-top: 20px;
 }
