@@ -1,18 +1,108 @@
 import React, { useState } from 'react';
-import { Card, Button, Modal, Form, Input, Select, Empty, Table, Checkbox, message } from 'antd';
-import { PlusOutlined, DeleteOutlined, SyncOutlined, StopOutlined, DownOutlined, EditOutlined } from '@ant-design/icons';
-import '../style/DataSourceConnection.css';
+import { Card, Button, Modal, Form, Input, Select, Empty, Table, Checkbox, message, Tree } from 'antd';
+import { PlusOutlined, DeleteOutlined, SyncOutlined, StopOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import '../style/DataSourceManagement.css';
 
 const { Option } = Select;
+const { TreeNode } = Tree;
 
-const DataSourceConnection = () => {
-    const [dataSources, setDataSources] = useState([]);
+const DataSourceManagement = () => {
+    const [dataSources, setDataSources] = useState([
+        {
+            key: '1',
+            name: '数据源1',
+            driver: 'MySQL',
+            host: 'localhost',
+            port: '3306',
+            user: 'root',
+            database: 'db1',
+            url: 'jdbc:mysql://localhost:3306/db1',
+            directories: ['目录1', '目录2'],
+            treeData: [
+                {
+                    title: '目录1',
+                    key: '0-0',
+                    children: [
+                        { title: '子目录1-1', key: '0-0-0' },
+                        { title: '子目录1-2', key: '0-0-1' },
+                    ],
+                },
+                {
+                    title: '目录2',
+                    key: '0-1',
+                    children: [
+                        { title: '子目录2-1', key: '0-1-0' },
+                        { title: '子目录2-2', key: '0-1-1' },
+                    ],
+                },
+            ],
+        },
+        {
+            key: '2',
+            name: '数据源2',
+            driver: 'PostgreSQL',
+            host: 'localhost',
+            port: '5432',
+            user: 'postgres',
+            database: 'db2',
+            url: 'jdbc:postgresql://localhost:5432/db2',
+            directories: ['目录3', '目录4'],
+            treeData: [
+                {
+                    title: '目录3',
+                    key: '0-2',
+                    children: [
+                        { title: '子目录3-1', key: '0-2-0' },
+                        { title: '子目录3-2', key: '0-2-1' },
+                    ],
+                },
+                {
+                    title: '目录4',
+                    key: '0-3',
+                    children: [
+                        { title: '子目录4-1', key: '0-3-0' },
+                        { title: '子目录4-2', key: '0-3-1' },
+                    ],
+                },
+            ],
+        },
+        {
+            key: '3',
+            name: '数据源3',
+            driver: 'Oracle',
+            host: 'localhost',
+            port: '1521',
+            user: 'admin',
+            database: 'db3',
+            url: 'jdbc:oracle:thin:@localhost:1521:db3',
+            directories: ['目录5', '目录6'],
+            treeData: [
+                {
+                    title: '目录5',
+                    key: '0-4',
+                    children: [
+                        { title: '子目录5-1', key: '0-4-0' },
+                        { title: '子目录5-2', key: '0-4-1' },
+                    ],
+                },
+                {
+                    title: '目录6',
+                    key: '0-5',
+                    children: [
+                        { title: '子目录6-1', key: '0-5-0' },
+                        { title: '子目录6-2', key: '0-5-1' },
+                    ],
+                },
+            ],
+        },
+    ]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedDriver, setSelectedDriver] = useState(null);
     const [currentDataSource, setCurrentDataSource] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedSources, setSelectedSources] = useState([]);
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+    const [searchText, setSearchText] = useState('');
 
     const showAddDataSourceModal = () => {
         setCurrentDataSource(null);
@@ -40,11 +130,11 @@ const DataSourceConnection = () => {
     };
 
     const handleEditDataSource = (values) => {
-        if (dataSources.some(ds => ds.name === values.name && ds.name !== currentDataSource.name)) {
+        if (dataSources.some(ds => ds.name === values.name && ds.key !== currentDataSource.key)) {
             message.error('名称已存在，请更换名称');
             return;
         }
-        const updatedDataSources = dataSources.map(ds => ds.name === currentDataSource.name ? values : ds);
+        const updatedDataSources = dataSources.map(ds => ds.key === currentDataSource.key ? values : ds);
         setDataSources(updatedDataSources);
         setIsModalVisible(false);
     };
@@ -57,7 +147,6 @@ const DataSourceConnection = () => {
         setDataSources(dataSources.filter(ds => !selectedSources.includes(ds.name)));
         setSelectedSources([]);
     };
-
 
     const handleSelectAll = (e) => {
         if (e.target.checked) {
@@ -84,6 +173,16 @@ const DataSourceConnection = () => {
         message.success('连接测试成功！');
     };
 
+    const handleSearch = (e) => {
+        setSearchText(e.target.value);
+    };
+
+    const filteredDataSources = dataSources.filter(ds =>
+        ds.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        ds.driver.toLowerCase().includes(searchText.toLowerCase()) ||
+        ds.directories.some(dir => dir.toLowerCase().includes(searchText.toLowerCase()))
+    );
+
     const columns = [
         {
             title: '',
@@ -109,11 +208,31 @@ const DataSourceConnection = () => {
             key: 'name'
         },
         {
-            title: '修改',
+            title: '驱动程序',
+            dataIndex: 'driver',
+            key: 'driver'
+        },
+        {
+            title: '主机',
+            dataIndex: 'host',
+            key: 'host'
+        },
+        {
+            title: '端口',
+            dataIndex: 'port',
+            key: 'port'
+        },
+        {
+            title: '数据库',
+            dataIndex: 'database',
+            key: 'database'
+        },
+        {
+            title: '操作',
             key: 'action',
             width: 100,
             render: (_, record) => (
-                <Button type="text" icon={<EditOutlined />} className="action-button" onClick={() => showEditDataSourceModal(record)}></Button>
+                <Button type="text" icon={<EditOutlined />} className="action-button" onClick={() => showEditDataSourceModal(record)}>编辑</Button>
             )
         }
     ];
@@ -126,6 +245,12 @@ const DataSourceConnection = () => {
             <p><b>用户名:</b> {record.user}</p>
             <p><b>数据库:</b> {record.database}</p>
             <p><b>URL:</b> {record.url}</p>
+            <p><b>资源目录:</b></p>
+            <Tree
+                showLine
+                defaultExpandAll
+                treeData={record.treeData}
+            />
         </div>
     );
 
@@ -145,7 +270,6 @@ const DataSourceConnection = () => {
                     <Option value="postgresql">PostgreSQL</Option>
                     <Option value="oracle">Oracle</Option>
                     <Option value="MongoDB">MongoDB</Option>
-
                     {/* Add other options as needed */}
                 </Select>
             </Form.Item>
@@ -167,6 +291,14 @@ const DataSourceConnection = () => {
             <Form.Item label="URL" name="url">
                 <Input placeholder="请输入URL" />
             </Form.Item>
+            <Form.Item label="资源目录" name="directories">
+                <Select mode="tags" placeholder="请输入资源目录">
+                    <Option value="目录1">目录1</Option>
+                    <Option value="目录2">目录2</Option>
+                    <Option value="目录3">目录3</Option>
+                    {/* Add other options as needed */}
+                </Select>
+            </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">{isEdit ? '保存修改' : '添加数据源'}</Button>
                 <Button type="default" style={{ marginLeft: 8 }} onClick={testConnection}>测试连接</Button>
@@ -174,11 +306,10 @@ const DataSourceConnection = () => {
         </Form>
     );
 
-
     return (
         <div className="source-connection">
             <Card
-                title="数据源连接"
+                title="数据源管理"
                 extra={
                     <div className="icon-buttons">
                         <Button icon={<PlusOutlined />} onClick={showAddDataSourceModal}>添加</Button>
@@ -188,6 +319,15 @@ const DataSourceConnection = () => {
                     </div>
                 }
             >
+                <div className="search-bar">
+                    <Input
+                        prefix={<SearchOutlined />}
+                        placeholder="搜索数据源名称、类型或资源目录"
+                        value={searchText}
+                        onChange={handleSearch}
+                        style={{ width: 300, marginBottom: 20 }}
+                    />
+                </div>
                 {dataSources.length === 0 ? (
                     <div className="empty-data-source">
                         <Empty description="创建数据源">
@@ -197,7 +337,7 @@ const DataSourceConnection = () => {
                 ) : (
                     <Table
                         columns={columns}
-                        dataSource={dataSources}
+                        dataSource={filteredDataSources}
                         rowKey="name"
                         expandable={{ expandedRowRender, expandedRowKeys, onExpand: handleExpand }}
                         pagination={false}
@@ -219,5 +359,4 @@ const DataSourceConnection = () => {
     );
 };
 
-export default DataSourceConnection;
-
+export default DataSourceManagement;
