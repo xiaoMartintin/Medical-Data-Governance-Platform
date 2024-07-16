@@ -8,6 +8,8 @@ import RankingChart from "./components/RankingChart";
 import {DataAssets} from "../../database/data";
 import {formatModelType} from "../data-model/methods";
 import {formatDataSourceType} from "../data-source/methods";
+import {diseases} from "../../database/disease";
+import {diseaseStudies} from "../../database/diseasestudy";
 const columns = [
     {
         title: '资产id',
@@ -38,7 +40,7 @@ class DataStatisticsPage extends React.Component{
             expandRowKeys: [],
             PieChart_Series:[
                 {
-                    name: '数据源',
+                    name: '病种',
                     type: 'pie',
                     radius: '50%',
                     data:[]
@@ -72,6 +74,17 @@ class DataStatisticsPage extends React.Component{
         });
         return series_data
     }
+    getPieChartSeriesDataV2 = (data) => {
+        let series_data = diseases.map(item => ({ name: item.Name, value: 0, diseaseID:item.ID}));
+        data.forEach(item => {
+                let foundItem = series_data.find(seriesItem => seriesItem.diseaseID === item.DiseaseID);
+                console.log(foundItem)
+                if (foundItem) {
+                    foundItem.value = foundItem.value + 1;
+                }
+        });
+        return series_data
+    }
     fetchAsset = () => {
         const params = {
             modelName: '',
@@ -99,12 +112,13 @@ class DataStatisticsPage extends React.Component{
             message.error(`加载数据资产失败：${error.message}`).then(r =>{} )
         })*/
         try {
-            const series_data = this.getPieChartSeriesData(DataAssets)
+           // const series_data = this.getPieChartSeriesData(DataAssets)
+            const series_data = this.getPieChartSeriesDataV2(diseaseStudies);
             this.setState({
                 dataAssets:DataAssets,
                 PieChart_Series:[
                     {
-                        name: '数据源',
+                        name: '病种',
                         type: 'pie',
                         radius: '50%',
                         data: series_data
@@ -124,7 +138,7 @@ class DataStatisticsPage extends React.Component{
             dataAssets:[],
             PieChart_Series:[
                 {
-                    name: '数据源',
+                    name: '病种',
                     type: 'pie',
                     radius: '50%',
                     data:[]
