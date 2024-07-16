@@ -163,12 +163,13 @@ const DataAssetPage = () => {
             } else {
                 filteredGraphData = DataAssets.filter(data => {
                     for (const key in params) {
-                        if (data[key] !== params[key]) {
+                        if (data[key] !== params[key] && params[key] !== '') {
                             return false;
                         }
                     }
                     return true;
                 });
+                filteredGraphData = modelsToGraph(filteredGraphData)
             }
             renderChart(filteredGraphData)
         }
