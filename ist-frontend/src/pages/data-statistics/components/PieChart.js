@@ -21,14 +21,27 @@ const PieChart = ( {seriesData} ) => {
                 trigger: 'item',
                 formatter: '{a} <br/>{b}: {c} ({d}%)'
             },
-            legend: {
+            /*legend: {
                 orient: 'vertical',
                 left: 10,
                 data: seriesData.map(item => item.name)
+            },*/
+            legend: {
+                right: 10,
+                bottom: 10,
+                type: 'scroll',
+                pageIconColor: 'black',
+                pageButtonItemGap: 5,
+                pageTextStyle: {
+                    color: 'black',
+                    fontSize: 12
+                },
+                pageIconInactiveColor: 'gray',
+                data:seriesData.map(item => item.name)
             },
             series: [
                 {
-                    name: '数据源',
+                    name: '病种',
                     type: 'pie',
                     radius: '50%',
                     data: seriesData.map(item => ({name:item.name,value:item.value}))

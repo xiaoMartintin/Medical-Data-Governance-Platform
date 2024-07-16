@@ -21,9 +21,11 @@ const columns = [
 ];
 
 const RankingChart = ({dataSource}) => (
-    <div className="ranking-container" style={{ width: '100%', height: '400px' }}>
+    <div className="ranking-container" style={{ width: '100%', height: '400px'}}>
         <text>排行榜</text>
-        <Table columns={columns} dataSource={dataSource.sort((a, b) => b.value - a.value)} pagination={false} />
+        <div style={{overflow:'auto', height:'350px'}}>
+        <Table columns={columns}  dataSource={dataSource.sort((a, b) => b.value - a.value)} pagination={false}/>
+        </div>
     </div>
 );
 
