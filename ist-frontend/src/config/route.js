@@ -108,7 +108,7 @@ const routes = [
           icon: <GlobalOutlined />
         }
       },
-      {
+      /*{
         path: '/query',
         // component: <DataMapPage/>,
         label: '资产查询',
@@ -123,7 +123,7 @@ const routes = [
         meta: {
           icon: <MonitorOutlined />
         }
-      },
+      },*/
       {
         path: '/map',
         component: <DataMapPage/>,
