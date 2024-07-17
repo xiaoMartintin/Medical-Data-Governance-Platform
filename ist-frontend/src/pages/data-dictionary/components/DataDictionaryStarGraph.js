@@ -49,9 +49,9 @@ const DataDictionaryStarGraph = ({dictionaries}) => {
                 }
 
                 let fieldId;
-                if (fieldMap.has(fieldName)) {
-                    fieldId = fieldMap.get(fieldName);
-                } else {
+                // if (fieldMap.has(fieldName)) {
+                //     fieldId = fieldMap.get(fieldName);
+                // } else {
                     fieldId = `field-${nodes.length}`;
                     fieldMap.set(fieldName, fieldId);
                     nodes.push({
@@ -65,7 +65,7 @@ const DataDictionaryStarGraph = ({dictionaries}) => {
                         },
                         value: 'Field',
                     });
-                }
+                // }
                 links.push({
                     source: tableId,
                     target: fieldId,
