@@ -1,48 +1,20 @@
 import React, { useState } from 'react'
-import { Upload, Button, Select, Table, Form, Input, Modal, Layout, Space, Row, Col, message } from 'antd'
+import { Upload, Button, Select, Table, Form, Input, Modal, Layout, Space, Row, Col, message, Spin, Popover } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
+import { submitFile, ocr_ct, ocr_mr } from '../service/file'
 
 const { Option } = Select
 const { Content, Header } = Layout
 
-//模拟数据
-const mockData_A = [
-  {
-    key: '1',
-    name: 'Example File 1',
-    type: 'Type A',
-    content: { 'name': 'lyican', 'age': 21, 'sex': 'male' },
-  },
-  {
-    key: '2',
-    name: 'Example File 2',
-    type: 'Type A',
-    content: { 'name': 'klx', 'age': 22, 'sex': 'male' },
-  },
-]
-
-const mockData_B = [
-  {
-    key: '1',
-    name: 'Example File 1',
-    type: 'Type B',
-    content: { 'verdict': 'anything', 'ct-number': '456', 'time': '2024-7-9 16:00:00' },
-  },
-  {
-    key: '2',
-    name: 'Example File 2',
-    type: 'Type B',
-    content: { 'verdict': 'something', 'ct-number': '123', 'time': '2024-7-9 12:00:00' },
-  },
-]
-
 const PdfPage = () => {
   const [fileList, setFileList] = useState([])
   const [reportType, setReportType] = useState(null)
-  const [parsedData, setParsedData] = useState([])
   const [editingRecord, setEditingRecord] = useState(null)
   const [isEditModalVisible, setIsEditModalVisible] = useState(false)
   const [isDbModalVisible, setIsDbModalVisible] = useState(false)
+  const [ids, setIds] = useState([])
+  const [info, setInfo] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const handleBeforeUpload = (file) => {
     setFileList((prevFileList) => [
@@ -55,49 +27,91 @@ const PdfPage = () => {
     return false // Prevent actual upload
   }
 
-  const handleUpload = () => {
-    //upload to mongodb and return ids
+  const handleMultiSubmit = () => {
     if (fileList.length === 0) {
-      message.error('请选择至少一个文件')
+      console.log("No files selected")
+      message.error("请选择至少一个文件")
+      return
     }
-    else {
-      message.success('文件已成功上传并存储')
+    const newIds = []
+    for (let i = 0; i < fileList.length; i++) {
+      const formData = new FormData()
+      formData.append('file', fileList[i].originFileObj)
+      submitFile(formData, (data) => {
+        //console.log(formData.get('file'))
+        console.log(data)
+        newIds.push(data._id)
+      })
     }
+    setIds(newIds)
+    message.success("文件已成功上传")
   }
 
   const handleParse = () => {
-    //use ids to find the pdf in mongodb and ocr parse
-    // Mock parsing logic
     if (fileList.length === 0) {
       message.error("请先选择文件")
       return
     }
-    //若ids列表为空，说明并未上传
-    // if(ids.length === 0){
-    //   message.error('请先上传文件')
-    // }
-    if (reportType === null) {
-      message.error("请先选择一个报告类型")
+    if (ids.length === 0) {
+      message.error("请先上传文件")
       return
     }
-    else if (reportType === 'typeA') {
-      //upload to different flask api according to type
-      const hide = message.loading("正在解析...", 0)
-      setTimeout(() => {
-        hide()
-        setParsedData(mockData_A)
-        message.success("解析完成")
-      }, 2000)
+    if (reportType === null) {
+      message.error("请选择一个报告类型")
+      return
     }
-    else {
-      const hide = message.loading("正在解析...", 0)
-      setTimeout(() => {
-        hide()
-        setParsedData(mockData_B)
-        message.success("解析完成")
-      }, 2000)
+    setLoading(true)
+    const json = {
+      "ids": ids
+    }
+    switch (reportType) {
+      case "CT":
+        ocr_ct(json, (response) => {
+          setLoading(false)
+          if (response.error) {
+            message.error('解析失败')
+          } else if (response) {
+            console.log(response)
+            let tmp = []
+            for (let i = 0; i < response.results.length; i++) {
+              tmp.push({
+                "key": i,
+                "name": fileList[i].originFileObj.name,
+                "type": reportType,
+                "content": response.results[i]
+              })
+            }
+            setInfo(tmp)
+            message.success('解析成功')
+          }
+        })
+        break
+      case "MR":
+        ocr_mr(json, (response) => {
+          setLoading(false)
+          if (response.error) {
+            message.error('解析失败')
+          } else if (response) {
+            console.log(response)
+            let tmp = []
+            for (let i = 0; i < response.results.length; i++) {
+              tmp.push({
+                "key": i,
+                "name": fileList[i].originFileObj.name,
+                "type": reportType,
+                "content": response.results[i]
+              })
+            }
+            setInfo(tmp)
+            message.success('解析成功')
+          }
+        })
+        break
+      default:
+        break
     }
     setFileList([])
+    setIds([])
   }
 
   const showEditModal = (record) => {
@@ -108,12 +122,12 @@ const PdfPage = () => {
   const handleEditSave = () => {
     form.validateFields()
       .then(values => {
-        const newData = [...parsedData]
+        const newData = [...info]
         const index = newData.findIndex(item => editingRecord.key === item.key)
         if (index > -1) {
           const item = newData[index]
           newData.splice(index, 1, { ...item, ...values, content: { ...editingRecord.content, ...values.content } })
-          setParsedData(newData)
+          setInfo(newData)
           setEditingRecord(null)
           setIsEditModalVisible(false)
         }
@@ -142,11 +156,16 @@ const PdfPage = () => {
   ]
 
   //自适应展示column
-  const dynamicColumns = parsedData.length > 0
-    ? Object.keys(parsedData[0].content).map(key => ({
+  const dynamicColumns = info.length > 0
+    ? Object.keys(info[0].content).map(key => ({
       title: key.charAt(0).toUpperCase() + key.slice(1),
       dataIndex: ['content', key],
       key: key,
+      render: (text) => (
+        <Popover content={text} title={key.charAt(0).toUpperCase() + key.slice(1)}>
+          <span>{text.length > 15 ? `${text.substring(0, 15)}...` : text}</span>
+        </Popover>
+      )
     }))
     : []
 
@@ -189,7 +208,7 @@ const PdfPage = () => {
         label={key.charAt(0).toUpperCase() + key.slice(1)}
         rules={[{ required: true, message: `Please input ${key}!` }]}
       >
-        <Input />
+        <Input.TextArea />
       </Form.Item>
     ))
   }
@@ -205,7 +224,7 @@ const PdfPage = () => {
           setIsDbModalVisible(false)
           message.success(`已成功落表`)
         }, 2000)
-        setParsedData([])
+        setInfo([])
       })
       .catch(info => {
         console.log('Validate Failed:', info)
@@ -213,7 +232,7 @@ const PdfPage = () => {
   }
 
   const handleConfirm = () => {
-    if (parsedData.length === 0) {
+    if (info.length === 0) {
       message.error("暂无数据")
     }
     else {
@@ -240,7 +259,7 @@ const PdfPage = () => {
               </Upload>
             </Col>
             <Col>
-              <Button onClick={handleUpload}>上传文件</Button>
+              <Button onClick={handleMultiSubmit}>上传文件</Button>
             </Col>
           </Row>
           <Row gutter={16} style={{ borderRadius: '3px' }}>
@@ -250,19 +269,21 @@ const PdfPage = () => {
                 style={{ width: '200px' }}
                 onChange={setReportType}
               >
-                <Option value="typeA">Type A</Option>
-                <Option value="typeB">Type B</Option>
+                <Option value="CT">CT检查报告单</Option>
+                <Option value="MR">MR检查报告单</Option>
               </Select>
             </Col>
             <Col>
-              <Button onClick={handleParse}>
-                OCR解析
-              </Button>
+              <Spin spinning={loading}>
+                <Button onClick={handleParse}>
+                  OCR解析
+                </Button>
+              </Spin>
             </Col>
           </Row>
           <Table
             bordered
-            dataSource={parsedData}
+            dataSource={info}
             columns={columns}
             rowClassName="editable-row"
             pagination={false}
