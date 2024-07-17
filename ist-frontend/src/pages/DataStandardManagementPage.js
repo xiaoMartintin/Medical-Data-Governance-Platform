@@ -8,38 +8,44 @@ const { confirm } = Modal
 const initialDataStandards = [
   {
     uuid: '1234567890',
-    name: 'Standard 1',
-    description: 'Description for Standard 1',
+    name: 'Patient Data Standard',
+    description: 'Standard for patient personal and contact information',
     version: '1.0',
     versionDescription: 'Initial version',
     fields: [
-      { name: 'Field 1', type: 'varchar', allowNull: false, length: 255, description: 'Description for Field 1' },
-      { name: 'Field 2', type: 'integer', allowNull: true, length: 4, description: 'Description for Field 2' },
-    ],
-  },
-  {
-    uuid: '1234567890',
-    name: 'Standard 1',
-    description: 'Description for Standard 1',
-    version: '1.1',
-    versionDescription: 'Minor Update',
-    fields: [
-      { name: 'Field 1', type: 'varchar', allowNull: false, length: 255, description: 'Update Field 1' },
-      { name: 'Field 2', type: 'integer', allowNull: true, length: 4, description: 'Update Field 2' },
+      { name: 'patient_id', type: 'varchar', allowNull: false, length: 255, description: 'Unique identifier for each patient' },
+      { name: 'name', type: 'varchar', allowNull: false, length: 255, description: 'Full name of the patient' },
+      { name: 'dob', type: 'date', allowNull: false, length: null, description: 'Date of birth of the patient' },
+      { name: 'contact_number', type: 'varchar', allowNull: true, length: 20, description: 'Contact number of the patient' }
     ],
   },
   {
     uuid: '0987654321',
-    name: 'Standard 2',
-    description: 'Description for Standard 2',
+    name: 'Appointment Data Standard',
+    description: 'Standard for appointment scheduling information',
+    version: '1.1',
+    versionDescription: 'Minor Update',
+    fields: [
+      { name: 'appointment_id', type: 'varchar', allowNull: false, length: 255, description: 'Unique identifier for each appointment' },
+      { name: 'patient_id', type: 'varchar', allowNull: false, length: 255, description: 'Identifier for the patient' },
+      { name: 'doctor_id', type: 'varchar', allowNull: false, length: 255, description: 'Identifier for the doctor' },
+      { name: 'appointment_date', type: 'datetime', allowNull: false, length: null, description: 'Date and time of the appointment' }
+    ],
+  },
+  {
+    uuid: '1122334455',
+    name: 'Medical Record Data Standard',
+    description: 'Standard for medical records and treatments',
     version: '1.0',
     versionDescription: 'Initial version',
     fields: [
-      { name: 'Field A', type: 'char', allowNull: false, length: 100, description: 'Description for Field A' },
-      { name: 'Field B', type: 'boolean', allowNull: true, length: 1, description: 'Description for Field B' },
+      { name: 'record_id', type: 'varchar', allowNull: false, length: 255, description: 'Unique identifier for each medical record' },
+      { name: 'patient_id', type: 'varchar', allowNull: false, length: 255, description: 'Identifier for the patient' },
+      { name: 'diagnosis', type: 'text', allowNull: false, length: null, description: 'Diagnosis details' },
+      { name: 'treatment', type: 'text', allowNull: false, length: null, description: 'Treatment details' }
     ],
   },
-]
+];
 
 function deepEqual (obj1, obj2) {
   if (obj1 === obj2)
