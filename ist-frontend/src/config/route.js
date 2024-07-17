@@ -4,12 +4,25 @@ import {
   FilePdfOutlined,
   SettingOutlined,
   BranchesOutlined,
-  FileTextOutlined
+  FileTextOutlined,
+  MoneyCollectOutlined,
+  RobotOutlined,
+  ShareAltOutlined,
+  DownloadOutlined,
+  SwapOutlined,
+  ScheduleOutlined,
+  SettingOutlined
 } from '@ant-design/icons'
 import PDFPage from '../pages/PDFPage'
 import DataStandardPage from '../pages/DatastandardPage'
 import DataStandardManagementPage from '../pages/DataStandardManagementPage'
 import InterfaceDocPage from '../pages/InterfaceDocPage'
+
+import DataExtractionStrategyManagement from '../components/DataExtractionStrategyManagement'
+import DataSourceManagement from '../components/DataSourceManagement'
+import DataExtractionSchedulingManagement from '../components/DataExtractionSchedulingManagement'
+import MappingRuleManagement from '../components/MappingRuleManagement'
+
 
 const routes = [
   {
@@ -45,6 +58,47 @@ const routes = [
       }
     ],
   },
+  {
+    path: '/data-extraction',
+    label: '数据抽取',
+    meta: {
+      icon: <DownloadOutlined />
+    },
+    children: [
+      {
+        path: '/source-connection',
+        component: <DataSourceManagement />,
+        label: '数据源管理',
+        meta: {
+          icon: <DatabaseFilled />
+        }
+      },
+      {
+        path: '/strategy-management',
+        component: <DataExtractionStrategyManagement />,
+        label: '抽取策略管理',
+        meta: {
+          icon: <SettingOutlined />
+        }
+      },
+      {
+        path: '/schedule-management',
+        component: <DataExtractionSchedulingManagement />,
+        label: '抽取调度管理',
+        meta: {
+          icon: <ScheduleOutlined />
+        }
+      },
+      {
+        path: '/mapping-management',
+        component: <MappingRuleManagement />,
+        label: '映射规则管理',
+        meta: {
+          icon: <SwapOutlined />
+        }
+      }
+    ]
+  }
 ]
 
 export default routes
