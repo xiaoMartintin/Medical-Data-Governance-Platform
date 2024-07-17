@@ -2,8 +2,14 @@ import {
   CloudOutlined,
   DatabaseFilled,
   DotChartOutlined,
-  FileSearchOutlined, GlobalOutlined, LineChartOutlined,
+  FileSearchOutlined,
+  GlobalOutlined, LineChartOutlined,
   MergeCellsOutlined,
+  MoneyCollectOutlined,
+  RobotOutlined,
+  ShareAltOutlined,
+  BookOutlined,
+  LinkOutlined, ExportOutlined, EyeOutlined, EditOutlined, SearchOutlined
   MoneyCollectOutlined, MonitorOutlined,
   RobotOutlined, SearchOutlined, ShareAltOutlined
 } from '@ant-design/icons'
@@ -140,6 +146,39 @@ const routes = [
           icon: <LineChartOutlined />
         }
       }
+    ]
+  },
+  {
+    path: '/data-dictionary',
+    label: '数据字典管理',
+    meta: {
+      icon: <BookOutlined />
+    },
+    children: [
+      {
+        path: '/manage',
+        component: <DataDictionaryManagePage />,
+        label: '管理维护',
+        meta: {
+          icon: <EditOutlined />
+        }
+      },
+      {
+        path: '/search',
+        component: <DataDictionarySearchPage />,
+        label: '检索查询',
+        meta: {
+          icon: <SearchOutlined />
+        }
+      },
+      {
+        path: '/visualize',
+        component: <DataDictionaryVisualizePage />,
+        label: '可视化',
+        meta: {
+          icon: <EyeOutlined />
+        }
+      },
     ]
   }
 ]
