@@ -10,6 +10,9 @@ import {formatModelType} from "../data-model/methods";
 import {formatDataSourceType} from "../data-source/methods";
 import {diseases} from "../../database/disease";
 import {diseaseStudies} from "../../database/diseasestudy";
+import {studies} from "../../database/study";
+import FormButton from "./components/FormButton";
+import DetailButton from "./components/FormButton";
 const columns = [
     {
         title: '资产id',
@@ -30,6 +33,22 @@ const columns = [
         title: '业务域',
         dataIndex: 'domain',
         align: "center"
+    },
+    {
+        title:'详情',
+        dataIndex:'detail',
+        render: record =>(
+            {/*<Button type="primary"
+                    onClick={
+                        () => {
+                            console.log(JSON.stringify(record))
+                        }
+                    }
+            >
+                查看详情
+            </Button>*/},
+           <DetailButton detail={record}/>
+            )
     }
 ];
 class DataStatisticsPage extends React.Component{
@@ -78,7 +97,6 @@ class DataStatisticsPage extends React.Component{
         let series_data = diseases.map(item => ({ name: item.Name, value: 0, diseaseID:item.ID}));
         data.forEach(item => {
                 let foundItem = series_data.find(seriesItem => seriesItem.diseaseID === item.DiseaseID);
-                console.log(foundItem)
                 if (foundItem) {
                     foundItem.value = foundItem.value + 1;
                 }
@@ -115,9 +133,31 @@ class DataStatisticsPage extends React.Component{
            // const series_data = this.getPieChartSeriesData(DataAssets)
 
             const series_data = this.getPieChartSeriesDataV2(diseaseStudies);
+            let dataAssets_ = DataAssets;
+            dataAssets_.forEach((item,index) => {
+               switch (item.domain){
+                   case "disease": {item.detail = diseases[index];break;}
+                   case "study": {item.detail = studies[index];break;}
+                   case "diseasestudy":{
+                       item.detail = diseaseStudies[index];
+                       item.detail.disease = diseases.find(disease => disease.ID === item.detail.DiseaseID).Name;
+                       item.detail.study = studies.find(study => study.ID === item.detail.StudyID).OriginalStudyUID;
+                       item.detail.relations = dataAssets_.filter(element => {
+                           /*return element.detail && ((
+                               element.domain === "disease" && element.detail.ID === item.detail.DiseaseID)
+                               || (element.domain === "study" && element.detail.ID === item.detail.StudyID));*/
+                           return element.detail && ((
+                                   element.domain === "disease" && element.detail.ID === item.detail.DiseaseID)
+                               || (element.domain === "study" && element.detail.ID === 4))
+                       }).map(result =>(result.id));
+                       break;
+                   }
+                   default:{item.detail = ""}
+               }
+            })
 
             this.setState({
-                dataAssets:DataAssets,
+                dataAssets:dataAssets_,
                 PieChart_Series:[
                     {
                         name: '病种',
@@ -180,15 +220,7 @@ class DataStatisticsPage extends React.Component{
                                               columns={[
                                                   {title: '数据源id', dataIndex: 'dataSourceId'},
                                                   {title: '类型', dataIndex: 'type',render:record => (<text>{formatDataSourceType(record)}</text>)},
-                                                  {title: 'url', dataIndex: 'url'},
-                                                  {title:'详情', render: record =>(
-                                                      <Button type="primary"
-                                                              onClick={
-                                                          () => message.success('注册成功！')
-                                                      }
-                                                      >
-                                                          查看详情
-                                                      </Button>)}
+                                                  {title: 'url', dataIndex: 'url'}
                                               ]}
                                               dataSource={record.dataSources}
                                               pagination={false}

@@ -14,7 +14,6 @@ const BarChart = ({ dataSource, text}) => {
 
     useEffect(() => {
         const xAxisData = dataSource.map(item => item.name)
-        console.log(xAxisData)
         const seriesData = dataSource.map(item => ({name:item.name,value:item.value}))
         const option = {
             tooltip: {
