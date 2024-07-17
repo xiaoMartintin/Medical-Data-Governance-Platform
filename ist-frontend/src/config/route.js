@@ -45,48 +45,6 @@ const routes = [
       }
     ],
   },
-  {
-    path: '/pdf-analysis',
-    label: 'PDF解析',
-    component: <PDFPage />,
-    meta: {
-      icon: <FilePdfOutlined />
-    },
-    // children: [
-    //   {
-    //     path: '/text',
-    //     component: <PDFPage />,
-    //     label: '文本解析',
-    //     meta: {
-    //       icon: <MoneyCollectOutlined />
-    //     }
-    //   },
-    //   {
-    //     path: '/picture',
-    //     //component: <DataMapPage />,
-    //     label: '图片OCR解析',
-    //     meta: {
-    //       icon: <ShareAltOutlined />
-    //     }
-    //   },
-    //   {
-    //     path: '/edit',
-    //     //component: <ModelSimilarityPage />,
-    //     label: '解析结果编辑与确认',
-    //     meta: {
-    //       icon: <FileSearchOutlined />
-    //     }
-    //   },
-    //   {
-    //     path: '/multi',
-    //     //component: <LLMChatPage />,
-    //     label: 'PDF批量解析',
-    //     meta: {
-    //       icon: <RobotOutlined />
-    //     }
-    //   }
-    // ]
-  }
 ]
 
 export default routes
