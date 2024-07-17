@@ -2,7 +2,7 @@ import React from "react";
 import BarChart from "./components/BarChart";
 import PieChart from "./components/PieChart";
 import {getDataAssets} from "../../apis/data-asset";
-import {Divider, message, Table} from "antd";
+import {Button, Divider, message, Table} from "antd";
 import config from "../data-source/config";
 import RankingChart from "./components/RankingChart";
 import {DataAssets} from "../../database/data";
@@ -113,7 +113,9 @@ class DataStatisticsPage extends React.Component{
         })*/
         try {
            // const series_data = this.getPieChartSeriesData(DataAssets)
+
             const series_data = this.getPieChartSeriesDataV2(diseaseStudies);
+
             this.setState({
                 dataAssets:DataAssets,
                 PieChart_Series:[
@@ -168,7 +170,7 @@ class DataStatisticsPage extends React.Component{
                     <Divider/>
                     <div className="Bottom_Container" style={{ flex: 1 }}>
                         <h3>仅展示前<text style={{color:'rgb(19,189,149)'}}>100</text>条数据资产</h3>
-                       <Table columns={columns}
+                        <Table columns={columns}
                               dataSource={this.state.dataAssets.slice(0,100)}
                               rowKey="id"
                               expandable={{
@@ -178,7 +180,15 @@ class DataStatisticsPage extends React.Component{
                                               columns={[
                                                   {title: '数据源id', dataIndex: 'dataSourceId'},
                                                   {title: '类型', dataIndex: 'type',render:record => (<text>{formatDataSourceType(record)}</text>)},
-                                                  {title: 'url', dataIndex: 'url'}
+                                                  {title: 'url', dataIndex: 'url'},
+                                                  {title:'详情', render: record =>(
+                                                      <Button type="primary"
+                                                              onClick={
+                                                          () => message.success('注册成功！')
+                                                      }
+                                                      >
+                                                          查看详情
+                                                      </Button>)}
                                               ]}
                                               dataSource={record.dataSources}
                                               pagination={false}
@@ -192,6 +202,7 @@ class DataStatisticsPage extends React.Component{
                                   showTotal: (total, range) => `${range[0]}-${range[1]} 共 ${total} 条`,
                                   showQuickJumper: true}}>
                        </Table>
+
                     </div>
                 </div>
             </>
