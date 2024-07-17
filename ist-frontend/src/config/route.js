@@ -7,8 +7,8 @@ import {
   MoneyCollectOutlined,
   RobotOutlined,
   ShareAltOutlined,
-  DownloadOutlined, // 新增的图标
-  FolderOpenOutlined,
+  DownloadOutlined,
+  SwapOutlined,
   ScheduleOutlined,
   SettingOutlined
 } from '@ant-design/icons'
@@ -16,6 +16,7 @@ import {
 import DataExtractionStrategyManagement from '../components/DataExtractionStrategyManagement'
 import DataSourceManagement from '../components/DataSourceManagement'
 import DataExtractionSchedulingManagement from '../components/DataExtractionSchedulingManagement'
+import MappingRuleManagement from '../components/MappingRuleManagement'
 
 
 const routes = [
@@ -129,6 +130,14 @@ const routes = [
         label: '抽取调度管理',
         meta: {
           icon: <ScheduleOutlined />
+        }
+      },
+      {
+        path: '/mapping-management',
+        component: <MappingRuleManagement />,
+        label: '映射规则管理',
+        meta:{
+          icon: <SwapOutlined />
         }
       }
     ]

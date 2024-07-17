@@ -12,8 +12,8 @@ const DataExtractionSchedulingManagement = () => {
     const [data, setData] = useState([
         {
             key: '1',
-            jobName: 'JS脚本模版2_copy_1_cp',
-            jobDescription: 'JS脚本测试2',
+            jobName: '患者入院记录',
+            jobDescription: '记录患者入院信息',
             runStatus: '未运行',
             schedule: '关闭',
             actions: [{ action: '创建', time: new Date('2023-07-01T10:00:00Z') }],
@@ -21,8 +21,8 @@ const DataExtractionSchedulingManagement = () => {
         },
         {
             key: '2',
-            jobName: 'SQL模版测试_copy_1_cp',
-            jobDescription: 'SQL模版测试',
+            jobName: '每日体温监测',
+            jobDescription: '记录每日患者的体温',
             runStatus: '运行中',
             schedule: '开启',
             actions: [
@@ -33,8 +33,8 @@ const DataExtractionSchedulingManagement = () => {
         },
         {
             key: '3',
-            jobName: 'Python脚本模版_copy_1_cp',
-            jobDescription: 'Python脚本测试',
+            jobName: '药物分发记录',
+            jobDescription: '记录患者药物分发情况',
             runStatus: '暂停',
             schedule: '关闭',
             actions: [
@@ -46,8 +46,8 @@ const DataExtractionSchedulingManagement = () => {
         },
         {
             key: '4',
-            jobName: 'Ruby脚本模版_copy_1_cp',
-            jobDescription: 'Ruby脚本测试',
+            jobName: '手术安排',
+            jobDescription: '记录和安排患者手术时间',
             runStatus: '未运行',
             schedule: '开启',
             actions: [
@@ -58,8 +58,8 @@ const DataExtractionSchedulingManagement = () => {
         },
         {
             key: '5',
-            jobName: 'Node脚本模版_copy_1_cp',
-            jobDescription: 'Node脚本测试',
+            jobName: '出院手续办理',
+            jobDescription: '记录患者出院信息和办理出院手续',
             runStatus: '运行中',
             schedule: '关闭',
             actions: [
@@ -70,8 +70,8 @@ const DataExtractionSchedulingManagement = () => {
         },
         {
             key: '6',
-            jobName: 'Go脚本模版_copy_1_cp',
-            jobDescription: 'Go脚本测试',
+            jobName: '每日病房消毒',
+            jobDescription: '记录每日病房消毒情况',
             runStatus: '暂停',
             schedule: '开启',
             actions: [
@@ -83,8 +83,8 @@ const DataExtractionSchedulingManagement = () => {
         },
         {
             key: '7',
-            jobName: 'Java脚本模版_copy_1_cp',
-            jobDescription: 'Java脚本测试',
+            jobName: '病人转诊记录',
+            jobDescription: '记录病人转诊信息',
             runStatus: '未运行',
             schedule: '关闭',
             actions: [
@@ -95,8 +95,8 @@ const DataExtractionSchedulingManagement = () => {
         },
         {
             key: '8',
-            jobName: 'C#脚本模版_copy_1_cp',
-            jobDescription: 'C#脚本测试',
+            jobName: '医疗设备维护',
+            jobDescription: '记录医疗设备的维护和检查情况',
             runStatus: '运行中',
             schedule: '开启',
             actions: [

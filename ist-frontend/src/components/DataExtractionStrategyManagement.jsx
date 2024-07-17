@@ -11,59 +11,60 @@ const DataExtractionStrategyManagement = () => {
     const [isRuleModalVisible, setIsRuleModalVisible] = useState(false);
     const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const [selectedRuleDetails, setSelectedRuleDetails] = useState(null);
     const [ruleGroups, setRuleGroups] = useState([
         {
-            title: '黑名单',
+            title: '抽取策略',
             key: '0-0',
             children: [
-                { title: '高危DDL语句', key: '0-0-0' },
-                { title: '高危DDL语句4', key: '0-0-1' },
-                { title: '高危DDL语句3', key: '0-0-2' },
-                { title: '高危DDL语句2', key: '0-0-3' },
-                { title: '高危DDL语句1', key: '0-0-4' },
-                { title: '高危操作2', key: '0-0-5' },
-                { title: '高危操作1', key: '0-0-6' },
+                { title: '策略1', key: '0-0-0' },
+                { title: '策略2', key: '0-0-1' },
             ],
         },
         {
-            title: '白名单',
+            title: '定时抽取',
             key: '0-1',
             children: [
-                { title: '规则3', key: '0-1-0' },
-                { title: '规则4', key: '0-1-1' },
+                { title: '策略3', key: '0-1-0' },
+                { title: '策略4', key: '0-1-1' },
             ],
         },
         {
-            title: '全审计策略',
+            title: '批量处理',
             key: '0-2',
             children: [],
-        },
-        {
-            title: '人侵检测策略',
-            key: '0-3',
-            children: [],
-        },
-        {
-            title: '通用SQL注入策略',
-            key: '0-4',
-            children: [],
-        },
+        }
     ]);
+
+    const [selectedRuleDetails, setSelectedRuleDetails] = useState({
+        策略名称: '规则1',
+        状态: true,
+        风险等级: '高风险',
+        抽取类型: '全量抽取',
+        抽取频率: '每天一次',
+        批量处理: false,
+        策略描述: '策略描述示例',
+        映射规则: '规则1',
+        时间粒度: '1s'
+    });
+
     const [currentRuleGroup, setCurrentRuleGroup] = useState('');
     const [currentRule, setCurrentRule] = useState('');
     const [form] = Form.useForm();
     const [groupForm] = Form.useForm();
     const [newGroupName, setNewGroupName] = useState('');
 
-
     const onTreeSelect = (selectedKeys, info) => {
         const selectedNode = info.node;
         setSelectedRuleDetails({
-            规则名称: selectedNode.title,
+            策略名称: selectedNode.title,
             状态: true,
             风险等级: '高风险',
-            规则描述: 'grant, revoke等操作'
+            抽取类型: '全量抽取',
+            抽取频率: '每天一次',
+            批量处理: false,
+            策略描述: '策略描述示例',
+            映射规则: '规则1',
+            时间粒度: '1s'
         });
     };
 
@@ -104,8 +105,8 @@ const DataExtractionStrategyManagement = () => {
     };
 
     const handleAddOrEditRule = (values) => {
-        if (values.ruleGroup === '新建规则组' && !newGroupName) {
-            message.error('请输入新建规则组名称');
+        if (values.ruleGroup === '新建策略组' && !newGroupName) {
+            message.error('请输入新建策略组名称');
             return;
         }
 
@@ -126,16 +127,16 @@ const DataExtractionStrategyManagement = () => {
                 return group;
             });
             setRuleGroups(updatedRuleGroups);
-            message.success('规则编辑成功');
+            message.success('策略编辑成功');
         } else {
-            if (values.ruleGroup === '新建规则组') {
+            if (values.ruleGroup === '新建策略组') {
                 const newRuleGroup = {
                     title: newGroupName,
                     key: `0-${ruleGroups.length}`,
                     children: [{ title: values.ruleName, key: `0-${ruleGroups.length}-0` }],
                 };
                 setRuleGroups([...ruleGroups, newRuleGroup]);
-                message.success('新规则组添加成功');
+                message.success('新策略组添加成功');
             } else {
                 const group = ruleGroups.find(group => group.title === values.ruleGroup);
                 const newKey = `${group.key}-${group.children.length}`;
@@ -150,7 +151,7 @@ const DataExtractionStrategyManagement = () => {
                     return g;
                 });
                 setRuleGroups(updatedRuleGroups);
-                message.success('规则添加成功');
+                message.success('策略添加成功');
             }
         }
         setIsRuleModalVisible(false);
@@ -166,17 +167,17 @@ const DataExtractionStrategyManagement = () => {
             return group;
         }).filter(group => group.children.length > 0);  // Remove empty groups
         setRuleGroups(updatedRuleGroups);
-        message.success('规则删除成功');
+        message.success('策略删除成功');
     };
 
     const handleDeleteRuleGroup = (ruleGroupKey) => {
         const updatedRuleGroups = ruleGroups.filter(group => group.key !== ruleGroupKey);
         setRuleGroups(updatedRuleGroups);
-        message.success('规则组删除成功');
+        message.success('策略组删除成功');
     };
 
     const handleRuleGroupChange = (value) => {
-        if (value === '新建规则组') {
+        if (value === '新建策略组') {
             form.setFieldsValue({ newRuleGroupName: '' });
             setNewGroupName('');
         }
@@ -190,19 +191,19 @@ const DataExtractionStrategyManagement = () => {
             return group;
         });
         setRuleGroups(updatedRuleGroups);
-        message.success('规则组名称编辑成功');
+        message.success('策略组名称编辑成功');
         setIsGroupModalVisible(false);
     };
 
     const handleSave = () => {
-        // Save logic for both "基本信息" and "客户端" sections
-        message.success('规则保存成功');
+        // Save logic for all sections
+        message.success('策略保存成功');
     };
 
     return (
         <div className="data-extraction-strategy-management">
             <div className="header">
-                <Button type="primary" onClick={showAddRuleModal}>添加规则</Button>
+                <Button type="primary" onClick={showAddRuleModal}>添加策略</Button>
                 <div className="right-buttons">
                     <Button type="primary" onClick={handleSave}>保存</Button>
                 </div>
@@ -239,7 +240,7 @@ const DataExtractionStrategyManagement = () => {
                 <div className="right-panel">
                     {selectedRuleDetails ? (
                         <Collapse expandIconPosition="right" defaultActiveKey={[]}>
-                            {['基本信息', '客户端', 'SQL', '操作对象', '结果', '其他'].map((key, index) => (
+                            {['基本信息', '抽取类型', '定时抽取', '批量处理'].map((key, index) => (
                                 <Panel header={key} key={index}>
                                     {key === "基本信息" ? (
                                         <Form
@@ -247,11 +248,11 @@ const DataExtractionStrategyManagement = () => {
                                             initialValues={selectedRuleDetails}
                                         >
                                             <Form.Item
-                                                label="规则名称"
-                                                name="规则名称"
-                                                rules={[{ required: true, message: '请输入规则名称' }]}
+                                                label="策略名称"
+                                                name="策略名称"
+                                                rules={[{ required: true, message: '请输入策略名称' }]}
                                             >
-                                                <Input value={selectedRuleDetails ? selectedRuleDetails.规则名称 : ''} />
+                                                <Input value={selectedRuleDetails ? selectedRuleDetails.策略名称 : ''} />
                                             </Form.Item>
                                             <Form.Item
                                                 label="状态"
@@ -272,152 +273,129 @@ const DataExtractionStrategyManagement = () => {
                                                 </Select>
                                             </Form.Item>
                                             <Form.Item
-                                                label="规则描述"
-                                                name="规则描述"
-                                                rules={[{ required: true, message: '请输入规则描述' }]}
+                                                label="策略描述"
+                                                name="策略描述"
+                                                rules={[{ required: true, message: '请输入策略描述' }]}
                                             >
                                                 <Input.TextArea />
                                             </Form.Item>
+                                            <Form
+                                                layout="vertical"
+                                                initialValues={selectedRuleDetails}
+                                            >
+                                            <Form.Item
+                                                label="映射规则"
+                                                name="映射规则"
+                                                rules={[{ required: true, message: '请选择映射规则' }]}
+                                            >
+                                                <Select showSearch>
+                                                    <Option value="映射规则1">映射规则1</Option>
+                                                    <Option value="映射规则2">映射规则2</Option>
+                                                    <Option value="映射规则3">映射规则3</Option>
+                                                </Select>
+                                            </Form.Item>
+                                            </Form>
                                         </Form>
-                                    ) : key === "客户端" ? (
-                                        <Tabs defaultActiveKey="1">
-                                            <TabPane tab="客户端IP" key="1">
+                                    ) : key === "抽取类型" ? (
+                                        <Tabs defaultActiveKey="1" onChange={activeKey => setSelectedRuleDetails(prev => ({ ...prev, 抽取类型: activeKey === '1' ? '全量抽取' : '部分抽取' }))}>
+                                            <TabPane tab="选择抽取类型" key="1">
                                                 <Form layout="vertical">
-                                                    <Form.Item label="是否启用" name="是否启用" valuePropName="checked">
-                                                        <Switch checkedChildren="ON" unCheckedChildren="OFF" />
-                                                    </Form.Item>
-                                                    <Form.Item label="关系" name="关系">
-                                                        <Select>
-                                                            <Option value="包含">包含</Option>
-                                                            <Option value="不包含">不包含</Option>
+                                                    <Form.Item label="抽取类型" name="抽取类型">
+                                                        <Select defaultValue={selectedRuleDetails.抽取类型} onChange={value => setSelectedRuleDetails(prev => ({ ...prev, 抽取类型: value }))}>
+                                                            <Option value="全量抽取">全量抽取</Option>
+                                                            <Option value="部分抽取">部分抽取</Option>
                                                         </Select>
                                                     </Form.Item>
-                                                    <Form.Item label="值" name="值">
-                                                        <Input />
-                                                    </Form.Item>
                                                 </Form>
                                             </TabPane>
-                                            <TabPane tab="客户端工具" key="2">
-                                                <p>客户端工具内容</p>
-                                            </TabPane>
-                                            <TabPane tab="客户端操作系统用户" key="3">
-                                                <p>客户端操作系统用户内容</p>
-                                            </TabPane>
-                                            <TabPane tab="客户端操作系统主机名" key="4">
-                                                <p>客户端操作系统主机名内容</p>
-                                            </TabPane>
-                                        </Tabs>
-                                    ) : key === "SQL" ? (
-                                        <Tabs defaultActiveKey="1">
-                                            <TabPane tab="SQL语句" key="1">
+                                            <TabPane tab="部分抽取字段" key="2" disabled={selectedRuleDetails.抽取类型 === '全量抽取'}>
                                                 <Form layout="vertical">
-                                                    <Form.Item label="是否启用" name="是否启用" valuePropName="checked">
-                                                        <Switch checkedChildren="ON" unCheckedChildren="OFF" />
-                                                    </Form.Item>
-                                                    <Form.Item label="值" name="值">
-                                                        <Input />
-                                                    </Form.Item>
-                                                </Form>
-                                            </TabPane>
-                                            <TabPane tab="SQL关键字" key="2">
-                                                <p>SQL关键字内容</p>
-                                            </TabPane>
-                                            <TabPane tab="SQL正则" key="3">
-                                                <p>SQL正则内容</p>
-                                            </TabPane>
-                                            <TabPane tab="特权操作" key="4">
-                                                <p>特权操作内容</p>
-                                            </TabPane>
-                                            <TabPane tab="操作类型" key="5">
-                                                <p>操作类型内容</p>
-                                            </TabPane>
-                                        </Tabs>
-                                    ) : key === "操作对象" ? (
-                                        <Tabs defaultActiveKey="1">
-                                            <TabPane tab="表组" key="1">
-                                                <Form layout="vertical">
-                                                    <Form.Item label="是否启用" name="是否启用" valuePropName="checked">
-                                                        <Switch checkedChildren="ON" unCheckedChildren="OFF" />
-                                                    </Form.Item>
-                                                    <Form.Item label="关系" name="关系">
-                                                        <Select>
-                                                            <Option value="包含">包含</Option>
-                                                            <Option value="不包含">不包含</Option>
+                                                    <Form.Item label="选择字段" name="选择字段">
+                                                        <Select mode="multiple">
+                                                            <Option value="字段1">字段1</Option>
+                                                            <Option value="字段2">字段2</Option>
+                                                            <Option value="字段3">字段3</Option>
                                                         </Select>
                                                     </Form.Item>
-                                                    <Form.Item label="值" name="值">
-                                                        <Input />
-                                                    </Form.Item>
                                                 </Form>
                                             </TabPane>
-                                            <TabPane tab="字段" key="2">
-                                                <p>字段内容</p>
-                                            </TabPane>
-                                            <TabPane tab="数据库与Schema" key="3">
-                                                <p>数据库与Schema内容</p>
-                                            </TabPane>
-                                            <TabPane tab="目标表" key="4">
-                                                <p>目标表内容</p>
-                                            </TabPane>
                                         </Tabs>
-                                    ) : key === "结果" ? (
-                                        <Tabs defaultActiveKey="1">
-                                            <TabPane tab="响应时间" key="1">
-                                                <Form layout="vertical">
-                                                    <Form.Item label="是否启用" name="是否启用" valuePropName="checked">
-                                                        <Switch checkedChildren="ON" unCheckedChildren="OFF" />
-                                                    </Form.Item>
-                                                    <Form.Item label="关系" name="关系">
+                                    ) : key === "定时抽取" ? (
+                                            <Form layout="vertical">
+                                                <Form.Item label="定时抽取" name="定时抽取" valuePropName="checked">
+                                                    <Switch
+                                                        checkedChildren="ON"
+                                                        unCheckedChildren="OFF"
+                                                        onChange={(checked) =>
+                                                            setSelectedRuleDetails((prev) => ({
+                                                                ...prev,
+                                                                定时抽取: checked,
+                                                            }))
+                                                        }
+                                                    />
+                                                </Form.Item>
+                                                {selectedRuleDetails.定时抽取 && (
+                                                    <Tabs defaultActiveKey="1">
+                                                        <TabPane tab="抽取频率" key="1">
+                                                            <Form layout="vertical">
+                                                                <Form.Item label="抽取频率" name="抽取频率">
+                                                                    <Select>
+                                                                        <Option value="每天一次">每天一次</Option>
+                                                                        <Option value="每周一次">每周一次</Option>
+                                                                        <Option value="每月一次">每月一次</Option>
+                                                                    </Select>
+                                                                </Form.Item>
+                                                            </Form>
+                                                        </TabPane>
+                                                        <TabPane tab="时间粒度" key="2">
+                                                            <Form layout="vertical">
+                                                                <Form.Item label="时间粒度" name="时间粒度">
+                                                                    <Select>
+                                                                        <Option value="100ms">100ms</Option>
+                                                                        <Option value="1s">1s</Option>
+                                                                        <Option value="1分钟">1分钟</Option>
+                                                                        <Option value="1小时">1小时</Option>
+                                                                    </Select>
+                                                                </Form.Item>
+                                                            </Form>
+                                                        </TabPane>
+                                                    </Tabs>
+                                                )}
+                                            </Form>
+                                        ) : key === "批量处理" ? (
+                                        <Form layout="vertical">
+                                            <Form.Item label="批量处理" name="批量处理" valuePropName="checked">
+                                                <Switch checkedChildren="ON" unCheckedChildren="OFF" onChange={checked => setSelectedRuleDetails(prev => ({ ...prev, 批量处理: checked }))} />
+                                            </Form.Item>
+                                            {selectedRuleDetails.批量处理 && (
+                                                <>
+                                                    <Form.Item
+                                                        label="批处理大小"
+                                                        name="批处理规则"
+                                                        rules={[{ required: true, message: '请选择批处理大小' }]}
+                                                    >
                                                         <Select>
-                                                            <Option value="等于">等于</Option>
-                                                            <Option value="大于">大于</Option>
-                                                            <Option value="小于">小于</Option>
+                                                            <Option value="10">10</Option>
+                                                            <Option value="100">100</Option>
+                                                            <Option value="1000">1000</Option>
                                                         </Select>
                                                     </Form.Item>
-                                                    <Form.Item label="值" name="值">
-                                                        <Input />
-                                                    </Form.Item>
-                                                </Form>
-                                            </TabPane>
-                                            <TabPane tab="影响行数" key="2">
-                                                <p>影响行数内容</p>
-                                            </TabPane>
-                                        </Tabs>
-                                    ) : key === "其他" ? (
-                                        <Tabs defaultActiveKey="1">
-                                            <TabPane tab="查询组" key="1">
-                                                <Form layout="vertical">
-                                                    <Form.Item label="是否启用" name="是否启用" valuePropName="checked">
-                                                        <Switch checkedChildren="ON" unCheckedChildren="OFF" />
-                                                    </Form.Item>
-                                                    <Form.Item label="关系" name="关系">
-                                                        <Select>
-                                                            <Option value="包含">包含</Option>
-                                                            <Option value="不包含">不包含</Option>
-                                                        </Select>
-                                                    </Form.Item>
-                                                    <Form.Item label="值" name="值">
-                                                        <Input />
-                                                    </Form.Item>
-                                                </Form>
-                                            </TabPane>
-                                            <TabPane tab="数据库用户" key="2">
-                                                <p>数据库用户内容</p>
-                                            </TabPane>
-                                        </Tabs>
-                                    ) : (
-                                        <p>{selectedRuleDetails[key]}</p>
-                                    )}
+                                                </>
+                                            )}
+                                        </Form>
+                                    ) : null}
                                 </Panel>
                             ))}
+
+
                         </Collapse>
                     ) : (
-                        <Card title="基本信息">请从左侧选择一个规则以查看详细信息。</Card>
+                        <Card title="基本信息">请从左侧选择一个策略以查看详细信息。</Card>
                     )}
                 </div>
             </div>
             <Modal
-                title={isEdit ? "编辑规则" : "添加规则"}
+                title={isEdit ? "编辑策略" : "添加策略"}
                 visible={isRuleModalVisible}
                 onCancel={handleCancel}
                 footer={null}
@@ -428,15 +406,15 @@ const DataExtractionStrategyManagement = () => {
                     form={form}
                 >
                     <Form.Item
-                        label="规则组"
+                        label="策略组"
                         name="ruleGroup"
-                        rules={[{ required: true, message: '请选择规则组' }]}
+                        rules={[{ required: true, message: '请选择策略组' }]}
                     >
                         <Select onChange={handleRuleGroupChange}>
                             {ruleGroups.map((group) => (
                                 <Option key={group.key} value={group.title}>{group.title}</Option>
                             ))}
-                            <Option value="新建规则组">新建规则组</Option>
+                            <Option value="新建策略组">新建策略组</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item
@@ -444,23 +422,23 @@ const DataExtractionStrategyManagement = () => {
                         shouldUpdate={(prevValues, currentValues) => prevValues.ruleGroup !== currentValues.ruleGroup}
                     >
                         {({ getFieldValue }) =>
-                            getFieldValue('ruleGroup') === '新建规则组' ? (
+                            getFieldValue('ruleGroup') === '新建策略组' ? (
                                 <Form.Item
-                                    label="新规则组名称"
+                                    label="新策略组名称"
                                     name="newRuleGroupName"
-                                    rules={[{ required: true, message: '请输入新规则组名称' }]}
+                                    rules={[{ required: true, message: '请输入新策略组名称' }]}
                                 >
-                                    <Input placeholder="请输入新规则组名称" onChange={(e) => setNewGroupName(e.target.value)} />
+                                    <Input placeholder="请输入新策略组名称" onChange={(e) => setNewGroupName(e.target.value)} />
                                 </Form.Item>
                             ) : null
                         }
                     </Form.Item>
                     <Form.Item
-                        label="规则名称"
+                        label="策略名称"
                         name="ruleName"
-                        rules={[{ required: true, message: '请输入规则名称' }]}
+                        rules={[{ required: true, message: '请输入策略名称' }]}
                     >
-                        <Input placeholder="请输入规则名称" />
+                        <Input placeholder="请输入策略名称" />
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">确定</Button>
@@ -469,7 +447,7 @@ const DataExtractionStrategyManagement = () => {
                 </Form>
             </Modal>
             <Modal
-                title="编辑规则组"
+                title="编辑策略组"
                 visible={isGroupModalVisible}
                 onCancel={handleCancel}
                 footer={null}
@@ -480,11 +458,11 @@ const DataExtractionStrategyManagement = () => {
                     form={groupForm}
                 >
                     <Form.Item
-                        label="规则组名称"
+                        label="策略组名称"
                         name="groupName"
-                        rules={[{ required: true, message: '请输入规则组名称' }]}
+                        rules={[{ required: true, message: '请输入策略组名称' }]}
                     >
-                        <Input placeholder="请输入规则组名称" />
+                        <Input placeholder="请输入策略组名称" />
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">确定</Button>
