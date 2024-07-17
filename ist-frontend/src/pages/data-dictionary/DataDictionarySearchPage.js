@@ -59,7 +59,7 @@ const DataDictionarySearchPage = () => {
             message.error('请选择导出格式');
             return;
         }
-        if (exportType === 'excel' || exportType === 'html') {
+        if (exportType === 'xlsx' || exportType === 'html') {
             exportToExcel(filtered, [data], exportType);
             message.success('导出成功');
             return;

@@ -5,17 +5,17 @@ import {
   FileSearchOutlined,
   GlobalOutlined, LineChartOutlined,
   MergeCellsOutlined,
-  MoneyCollectOutlined,
-  RobotOutlined,
   ShareAltOutlined,
   BookOutlined,
-  LinkOutlined, ExportOutlined, EyeOutlined, EditOutlined, SearchOutlined
-  MoneyCollectOutlined, MonitorOutlined,
-  RobotOutlined, SearchOutlined, ShareAltOutlined
+  EyeOutlined, EditOutlined,
+  MoneyCollectOutlined, RobotOutlined, SearchOutlined
 } from '@ant-design/icons'
 import DataAssetPage from "../pages/data-asset/DataAssetPage";
 import DataMapPage from "../pages/data-map/DataMapPage";
 import DataStatisticsPage from "../pages/data-statistics/DataStatisticsPage";
+import DataDictionaryVisualizePage from "../pages/data-dictionary/DataDictionaryVisualizePage";
+import DataDictionarySearchPage from "../pages/data-dictionary/DataDictionarySearchPage";
+import DataDictionaryManagePage from "../pages/data-dictionary/DataDictionaryManagePage";
 
 const routes = [
   {

@@ -11,7 +11,6 @@ import {formatDataSourceType} from "../data-source/methods";
 import {diseases} from "../../database/disease";
 import {diseaseStudies} from "../../database/diseasestudy";
 import {studies} from "../../database/study";
-import FormButton from "./components/FormButton";
 import DetailButton from "./components/FormButton";
 const columns = [
     {
