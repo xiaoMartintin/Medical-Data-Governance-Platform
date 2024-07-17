@@ -1,6 +1,4 @@
-/* DataExtractionManagement.css */
-
-.data-extraction-strategy-management {
+.mapping-rule-management {
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -11,12 +9,6 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-}
-
-.right-buttons {
-    display: flex;
-    justify-content: flex-end;
-    flex-grow: 1;
 }
 
 .right-buttons > button {
@@ -42,24 +34,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-right: 10px;
 }
-
-.tree-node .icon-right {
-    display: flex;
-    justify-content: flex-end;
-    flex-grow: 1;
-}
-
-
 
 .tree-node .anticon {
+    margin-left: 10px;
     color: #1890ff;
     cursor: pointer;
 }
 
 .tree-node .anticon:hover {
     color: #40a9ff;
+}
+
+.icon-right {
+    margin-left: auto;
 }
 
 .ant-modal-title {

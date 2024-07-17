@@ -10,92 +10,151 @@ const DataSourceManagement = () => {
     const [dataSources, setDataSources] = useState([
         {
             key: '1',
-            name: '数据源1',
+            name: '患者数据库',
             driver: 'MySQL',
-            host: 'localhost',
+            host: '192.168.0.10',
             port: '3306',
-            user: 'root',
-            database: 'db1',
-            url: 'jdbc:mysql://localhost:3306/db1',
-            directories: ['目录1', '目录2'],
+            user: 'hospital_admin',
+            database: 'patient_db',
+            url: 'jdbc:mysql://192.168.0.10:3306/patient_db',
+            directories: ['患者信息', '入院记录'],
             treeData: [
                 {
-                    title: '目录1',
+                    title: '患者信息',
                     key: '0-0',
                     children: [
-                        { title: '子目录1-1', key: '0-0-0' },
-                        { title: '子目录1-2', key: '0-0-1' },
+                        { title: '基本信息', key: '0-0-0' },
+                        { title: '联系信息', key: '0-0-1' },
                     ],
                 },
                 {
-                    title: '目录2',
+                    title: '入院记录',
                     key: '0-1',
                     children: [
-                        { title: '子目录2-1', key: '0-1-0' },
-                        { title: '子目录2-2', key: '0-1-1' },
+                        { title: '病历记录', key: '0-1-0' },
+                        { title: '手术记录', key: '0-1-1' },
                     ],
                 },
             ],
         },
         {
             key: '2',
-            name: '数据源2',
+            name: '医药数据库',
             driver: 'PostgreSQL',
-            host: 'localhost',
+            host: '192.168.0.11',
             port: '5432',
-            user: 'postgres',
-            database: 'db2',
-            url: 'jdbc:postgresql://localhost:5432/db2',
-            directories: ['目录3', '目录4'],
+            user: 'pharma_admin',
+            database: 'pharma_db',
+            url: 'jdbc:postgresql://192.168.0.11:5432/pharma_db',
+            directories: ['药品信息', '库存记录'],
             treeData: [
                 {
-                    title: '目录3',
+                    title: '药品信息',
                     key: '0-2',
                     children: [
-                        { title: '子目录3-1', key: '0-2-0' },
-                        { title: '子目录3-2', key: '0-2-1' },
+                        { title: '药品列表', key: '0-2-0' },
+                        { title: '药品详情', key: '0-2-1' },
                     ],
                 },
                 {
-                    title: '目录4',
+                    title: '库存记录',
                     key: '0-3',
                     children: [
-                        { title: '子目录4-1', key: '0-3-0' },
-                        { title: '子目录4-2', key: '0-3-1' },
+                        { title: '入库记录', key: '0-3-0' },
+                        { title: '出库记录', key: '0-3-1' },
                     ],
                 },
             ],
         },
         {
             key: '3',
-            name: '数据源3',
+            name: '财务数据库',
             driver: 'Oracle',
-            host: 'localhost',
+            host: '192.168.0.12',
             port: '1521',
-            user: 'admin',
-            database: 'db3',
-            url: 'jdbc:oracle:thin:@localhost:1521:db3',
-            directories: ['目录5', '目录6'],
+            user: 'finance_admin',
+            database: 'finance_db',
+            url: 'jdbc:oracle:thin:@192.168.0.12:1521:finance_db',
+            directories: ['账单信息', '支付记录'],
             treeData: [
                 {
-                    title: '目录5',
+                    title: '账单信息',
                     key: '0-4',
                     children: [
-                        { title: '子目录5-1', key: '0-4-0' },
-                        { title: '子目录5-2', key: '0-4-1' },
+                        { title: '住院账单', key: '0-4-0' },
+                        { title: '门诊账单', key: '0-4-1' },
                     ],
                 },
                 {
-                    title: '目录6',
+                    title: '支付记录',
                     key: '0-5',
                     children: [
-                        { title: '子目录6-1', key: '0-5-0' },
-                        { title: '子目录6-2', key: '0-5-1' },
+                        { title: '支付详情', key: '0-5-0' },
+                        { title: '退款记录', key: '0-5-1' },
+                    ],
+                },
+            ],
+        },
+        {
+            key: '4',
+            name: '实验室数据库',
+            driver: 'SQLServer',
+            host: '192.168.0.13',
+            port: '1433',
+            user: 'lab_admin',
+            database: 'lab_db',
+            url: 'jdbc:sqlserver://192.168.0.13:1433;databaseName=lab_db',
+            directories: ['实验室报告', '检验记录'],
+            treeData: [
+                {
+                    title: '实验室报告',
+                    key: '0-6',
+                    children: [
+                        { title: '血液报告', key: '0-6-0' },
+                        { title: '尿液报告', key: '0-6-1' },
+                    ],
+                },
+                {
+                    title: '检验记录',
+                    key: '0-7',
+                    children: [
+                        { title: '日常检验', key: '0-7-0' },
+                        { title: '特殊检验', key: '0-7-1' },
+                    ],
+                },
+            ],
+        },
+        {
+            key: '5',
+            name: '人事数据库',
+            driver: 'MongoDB',
+            host: '192.168.0.14',
+            port: '27017',
+            user: 'hr_admin',
+            database: 'hr_db',
+            url: 'mongodb://192.168.0.14:27017/hr_db',
+            directories: ['员工信息', '工作记录'],
+            treeData: [
+                {
+                    title: '员工信息',
+                    key: '0-8',
+                    children: [
+                        { title: '基本信息', key: '0-8-0' },
+                        { title: '联系信息', key: '0-8-1' },
+                    ],
+                },
+                {
+                    title: '工作记录',
+                    key: '0-9',
+                    children: [
+                        { title: '出勤记录', key: '0-9-0' },
+                        { title: '加班记录', key: '0-9-1' },
                     ],
                 },
             ],
         },
     ]);
+
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedDriver, setSelectedDriver] = useState(null);
     const [currentDataSource, setCurrentDataSource] = useState(null);
