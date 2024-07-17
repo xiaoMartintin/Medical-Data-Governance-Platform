@@ -4,13 +4,6 @@ export function submitFile (fileInfo, callback) {
   postRequest_formData(root_url + "/ocr/UpdatePDF", fileInfo, callback)
 }
 
-export function ocr (id, callback) {
-  getRequest_noToken(flask_url + "/ocr/TextExtraction?id=" + id, callback)
-}
-
-export function ocr_multi (ids, callback) {
-  postRequest_json(flask_url + "/ocr/TextExtractionMulti", ids, callback)
-}
 
 export function ocr_ct (ids, callback) {
   postRequest_json(flask_url + "/ocr/CT_Report", ids, callback)

@@ -39,12 +39,17 @@ const PdfPage = () => {
       formData.append('file', fileList[i].originFileObj)
       submitFile(formData, (data) => {
         //console.log(formData.get('file'))
-        console.log(data)
-        newIds.push(data._id)
+        if (data) {
+          console.log(data)
+          newIds.push(data._id)
+          message.success("文件已成功上传")
+        }
+        else {
+          message.error("未能上传文件")
+        }
       })
     }
     setIds(newIds)
-    message.success("文件已成功上传")
   }
 
   const handleParse = () => {
@@ -177,9 +182,9 @@ const PdfPage = () => {
       dataIndex: 'operation',
       key: 'operation',
       render: (_, record) => (
-        <a onClick={() => showEditModal(record)}>
+        <Button type='link' onClick={() => showEditModal(record)}>
           Edit
-        </a>
+        </Button>
       ),
     },
   ]
