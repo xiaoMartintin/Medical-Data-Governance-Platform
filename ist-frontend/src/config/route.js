@@ -11,9 +11,9 @@ import {
   DownloadOutlined,
   SwapOutlined,
   ScheduleOutlined,
-  SettingOutlined
+  DatabaseFilled
+
 } from '@ant-design/icons'
-import PDFPage from '../pages/PDFPage'
 import DataStandardPage from '../pages/DatastandardPage'
 import DataStandardManagementPage from '../pages/DataStandardManagementPage'
 import InterfaceDocPage from '../pages/InterfaceDocPage'
