@@ -1,4 +1,4 @@
-import { getRequest_noToken, root_url, flask_url, postRequest_formData, postRequest_json } from "../utility/fetch"
+import { root_url, flask_url, postRequest_formData, postRequest_json } from "../utility/fetch"
 
 export function submitFile (fileInfo, callback) {
   postRequest_formData(root_url + "/ocr/UpdatePDF", fileInfo, callback)
