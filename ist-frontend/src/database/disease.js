@@ -10,7 +10,7 @@ export const diseases = [
     },
     {
         "ID": 2,
-        "Name": "肝Ca",
+        "Name": "肺Ca",
         "SCP_AE": "feiaiscp",
         "Remark": null,
         "IsDeleted": false,

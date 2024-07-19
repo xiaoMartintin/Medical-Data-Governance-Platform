@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Button, Modal, Table} from 'antd';
+import DataAssetButton from "./DataAssetButton";
 const DetailButton = ({detail}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
@@ -29,21 +30,35 @@ const DetailButton = ({detail}) => {
                 </tr>
                 </tbody>*/}
                 <Table style={{overflow:"auto"}} columns={
+                    (detail.hasOwnProperty("studies"))?
                     Object.keys(detail).map(
-                        (item) =>(
-                            {
+                        (item) => ({
                                 title:item,
-                                dataIndex:item,
-                                render: record => (<div>{record === null || record === undefined || record === ""?
-                                    "Unknown":(item === "relations")?(record.map((item,index)=>(
+                                dataIndex: item,
+                                render: record => (<div>{record === null || record === undefined || record === "" ?
+                                    "Unknown" : (item === "relations") ? (record.map((item, index) => (
                                         <>
                                             <strong>资产{index}:<br/></strong>
                                             {item}
                                         </>
-                                    ))):record.toString()}</div>)
-                            }
+                                    ))) :(item === "studies")? <DataAssetButton info={{
+                                        studies:detail.studies,
+                                        DiseaseID:detail.ID}}>
+                                    </DataAssetButton>: record.toString()}</div>)
+                            })
+                    ):Object.keys(detail).map(
+                            (item) => ({
+                                title:item,
+                                dataIndex: item,
+                                render: record => (<div>{record === null || record === undefined || record === "" ?
+                                    "Unknown" : (item === "relations") ? (record.map((item, index) => (
+                                        <>
+                                            <strong>资产{index}:<br/></strong>
+                                            {item}
+                                        </>
+                                    ))) : record.toString()}</div>)
+                            })
                         )
-                    )
                 }
                 dataSource={[detail]}>
 

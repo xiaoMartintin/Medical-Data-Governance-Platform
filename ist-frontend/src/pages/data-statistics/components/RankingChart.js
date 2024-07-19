@@ -9,12 +9,12 @@ const columns = [
         render: (text, record, index) => index + 1
     },
     {
-        title: 'DataSource',
+        title: '病种',
         dataIndex: 'name',
         key: 'name'
     },
     {
-        title: 'Count',
+        title: '病例数量',
         dataIndex: 'value',
         key: 'value'
     }

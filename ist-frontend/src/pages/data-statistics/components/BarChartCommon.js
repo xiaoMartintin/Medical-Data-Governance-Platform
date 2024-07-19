@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import {value} from "lodash/seq";
 
-const BarChart = ({ dataSource, text}) => {
+const BarChartCommon = ({ dataSource, text, elementName}) => {
     const chartInstanceRef = useRef(null);
 
     const resizeChart = () => {
@@ -26,7 +26,7 @@ const BarChart = ({ dataSource, text}) => {
             title: { text, x: 'center' }
         };
 
-        const chartInstance = echarts.init(document.getElementById('bar-chart'));
+        const chartInstance = echarts.init(document.getElementById(elementName));
         chartInstance.setOption(option);
 
         const handleResize = () => {
@@ -45,7 +45,7 @@ const BarChart = ({ dataSource, text}) => {
         };
     }, [dataSource, text]);
 
-    return <div id="bar-chart" style={{ width: '100%', height: '400px' }}></div>;
+    return <div id={elementName} key ={elementName} style={{ width: '100%', height: '400px' }}></div>;
 };
 
-export default BarChart;
+export default BarChartCommon;
