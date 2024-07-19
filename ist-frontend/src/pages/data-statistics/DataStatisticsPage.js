@@ -11,7 +11,7 @@ import {formatDataSourceType} from "../data-source/methods";
 import {diseases} from "../../database/disease";
 import {diseaseStudies} from "../../database/diseasestudy";
 import {studies} from "../../database/study";
-import DetailButton from "./components/FormButton";
+import DetailButton from "./components/DetailButton";
 const columns = [
     {
         title: '资产id',
@@ -135,7 +135,16 @@ class DataStatisticsPage extends React.Component{
             let dataAssets_ = DataAssets;
             dataAssets_.forEach((item,index) => {
                switch (item.domain){
-                   case "disease": {item.detail = diseases[index];break;}
+                   case "disease": {
+                       item.detail = diseases[index];
+                       const DiseaseID = item.detail.ID;
+                       const StudyIDs = diseaseStudies.filter(diseaseStudy => {
+                           return diseaseStudy.DiseaseID === DiseaseID;
+                       }).map(diseaseStudy => diseaseStudy.StudyID);
+                       const Studies = StudyIDs.map(studyID => studies.find(study => study.ID ===studyID));
+                       item.detail.studies = Studies;
+                       break;
+                   }
                    case "study": {item.detail = studies[index];break;}
                    case "diseasestudy":{
                        item.detail = diseaseStudies[index];

@@ -4,140 +4,281 @@ export const studies = [
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "1.121414141.09102930"
+        "OriginalStudyUID": "1.121414141.09102930",
+        "Gender":"男",
+        "ExamAge":"30",
+        "BirthDay":"1990-01-01",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"湖北",
+
     },
     {
         "ID": 2,
         "HospitalCode": null,
         "HospitalName": null,
         "OriginalPatientID": "YS100002",
-        "OriginalStudyUID": "1.121414141.09102931"
+        "OriginalStudyUID": "1.121414141.09102931",
+        "Gender":"女",
+        "ExamAge":"25",
+        "BirthDay":"1995-05-12",
+        "OriginalTelelphone":"12345",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"广东"
     },
     {
         "ID": 3,
         "HospitalCode": null,
         "HospitalName": null,
         "OriginalPatientID": "YS100001",
-        "OriginalStudyUID": "1.121414141.09102932"
+        "OriginalStudyUID": "1.121414141.09102932",
+        "Gender":"男",
+        "ExamAge":"35",
+        "BirthDay":"1985-09-15",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"北京"
     },
     {
         "ID": 4,
         "HospitalCode": null,
         "HospitalName": null,
         "OriginalPatientID": "YS100001",
-        "OriginalStudyUID": "1.1212412412412"
+        "OriginalStudyUID": "1.1212412412412",
+        "Gender":"男",
+        "ExamAge":"32",
+        "BirthDay":"1988-03-10",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"上海"
     },
     {
         "ID": 5,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "22324.41414124124"
+        "OriginalStudyUID": "22324.41414124124",
+        "Gender":"男",
+        "ExamAge":"33",
+        "BirthDay":"1987-07-25",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"四川"
     },
     {
         "ID": 6,
         "HospitalCode": null,
         "HospitalName": null,
         "OriginalPatientID": "YS100001",
-        "OriginalStudyUID": "9.1241241241241"
+        "OriginalStudyUID": "9.1241241241241",
+        "Gender":"男",
+        "ExamAge":"29",
+        "BirthDay":"1991-11-08",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"福建"
     },
     {
         "ID": 7,
         "HospitalCode": null,
         "HospitalName": null,
         "OriginalPatientID": "YS100001",
-        "OriginalStudyUID": "312414124"
+        "OriginalStudyUID": "312414124",
+        "Gender":"男",
+        "ExamAge":"31",
+        "BirthDay":"1989-04-03",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"浙江"
     },
     {
         "ID": 8,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "252523535"
+        "OriginalStudyUID": "252523535",
+        "Gender":"女",
+        "ExamAge":"27",
+        "BirthDay":"1993-02-20",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"江苏"
     },
     {
         "ID": 9,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "12.9021014011"
+        "OriginalStudyUID": "12.9021014011",
+        "Gender":"男",
+        "ExamAge":"34",
+        "BirthDay":"1986-12-15",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"山东"
     },
     {
         "ID": 10,
         "HospitalCode": null,
         "HospitalName": null,
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "2423532"
+        "OriginalStudyUID": "2423532",
+        "Gender":"女",
+        "ExamAge":"26",
+        "BirthDay":"1994-08-28",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"河南"
     },
     {
         "ID": 11,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "2344444"
+        "OriginalStudyUID": "2344444",
+        "Gender":"男",
+        "ExamAge":"30",
+        "BirthDay":"1990-01-01",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"汉族",
+        "Province":"湖北"
     },
     {
         "ID": 12,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "5325353"
+        "OriginalStudyUID": "5325353",
+        "Gender":"女",
+        "ExamAge":"28",
+        "BirthDay":"1992-05-20",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"回族",
+        "Province":"广东"
     },
     {
         "ID": 13,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "24124125"
+        "OriginalStudyUID": "24124125",
+        "Gender":"男",
+        "ExamAge":"35",
+        "BirthDay":"1985-09-15",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"苗族",
+        "Province":"北京"
     },
     {
         "ID": 14,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "214122412"
+        "OriginalStudyUID": "214122412",
+        "Gender":"女",
+        "ExamAge":"32",
+        "BirthDay":"1988-03-10",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"藏族",
+        "Province":"上海"
     },
     {
         "ID": 15,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "5555124124"
+        "OriginalStudyUID": "5555124124",
+        "Gender":"男",
+        "ExamAge":"33",
+        "BirthDay":"1987-07-25",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"壮族",
+        "Province":"四川"
     },
     {
         "ID": 16,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "2214124"
+        "OriginalStudyUID": "2214124",
+        "Gender":"女",
+        "ExamAge":"29",
+        "BirthDay":"1991-11-08",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"傣族",
+        "Province":"福建"
     },
     {
         "ID": 17,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "5555141"
+        "OriginalStudyUID": "5555141",
+        "Gender":"男",
+        "ExamAge":"31",
+        "BirthDay":"1989-04-03",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"维吾尔族",
+        "Province":"浙江"
     },
     {
         "ID": 18,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "123123"
+        "OriginalStudyUID": "123123",
+        "Gender":"女",
+        "ExamAge":"27",
+        "BirthDay":"1993-02-20",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"彝族",
+        "Province":"江苏"
     },
     {
         "ID": 19,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "41412412"
+        "OriginalStudyUID": "41412412",
+        "Gender":"女",
+        "ExamAge":"26",
+        "BirthDay":"1994-08-28",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"朝鲜族",
+        "Province":"河南"
     },
     {
         "ID": 20,
         "HospitalCode": null,
         "HospitalName": "YANSHIJIGOUYI",
         "OriginalPatientID": "YS100004",
-        "OriginalStudyUID": "2412412"
+        "OriginalStudyUID": "2412412",
+        "Gender":"男",
+        "ExamAge":"34",
+        "BirthDay":"1986-12-15",
+        "OriginalTelelphone":"10086",
+        "Nationality":"中国",
+        "Ethnicity":"土家族",
+        "Province":"山东"
     },
     {
         "ID": 21,
