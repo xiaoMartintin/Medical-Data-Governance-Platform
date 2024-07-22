@@ -46,7 +46,13 @@ const DetailButton = ({detail}) => {
                                         DiseaseID:detail.ID}}>
                                     </DataAssetButton>: record.toString()}</div>)
                             })
-                    ):Object.keys(detail).map(
+                    ).concat({
+                        title: "Export",
+                        dataIndex: "studies",
+                        render: () => (
+                            <></>
+                        )
+                    })  :Object.keys(detail).map(
                             (item) => ({
                                 title:item,
                                 dataIndex: item,
