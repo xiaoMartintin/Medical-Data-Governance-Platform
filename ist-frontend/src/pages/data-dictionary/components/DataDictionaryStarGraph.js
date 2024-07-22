@@ -24,7 +24,7 @@ const DataDictionaryStarGraph = ({dictionaries}) => {
                 value: dictionary.description
             });
 
-            dictionary.fields.forEach(({name: fieldName, table: tableName}) => {
+            dictionary.fields.forEach(({name: fieldName, table: tableName, key: key}) => {
                 let tableId;
                 if (tableMap.has(tableName)) {
                     tableId = tableMap.get(tableName);

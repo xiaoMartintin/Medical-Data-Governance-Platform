@@ -80,7 +80,15 @@ export const getDataLineage = (dictionaryKey, key) => {
 
         const parentName = getNodeName(parentField);
 
-        nodes.push({ id: parentName, name: parentName, category: 'field', draggable: true });
+        nodes.push({
+            id: parentName,
+            name: parentName,
+            category: 'field',
+            draggable: true,
+            itemStyle: {
+                color: '#798698'
+            },
+        });
         links.push({ source: parentName, target: getNodeName(currentField) });
 
         currentField = parentField;
@@ -91,7 +99,15 @@ export const getDataLineage = (dictionaryKey, key) => {
 
     const dataSource = dataSources.find(dataSource => dataSource.id === dictionary.dataSourceId);
 
-    nodes.push({ id: dataSource.name, name: dataSource.name, category: 'dataSource', draggable: true });
+    nodes.push({
+        id: dataSource.name,
+        name: dataSource.name,
+        category: 'dataSource',
+        draggable: true,
+        itemStyle: {
+            color: '#798698'
+        },
+    });
     links.push({ source: dataSource.name, target: getNodeName(currentField) });
 
     console.log({ nodes, links })
