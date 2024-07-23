@@ -33,7 +33,7 @@ const DataAssetButton = ({info}) => {
                     {Object.values(detail).map((value) =>(<td>{value}</td>))}
                 </tr>
                 </tbody>*/}
-                <MySteps info={info} current={current} setCurrent={setCurrent}/>
+                <MySteps info={info} current={current} setCurrent={setCurrent} handleClose={handleOk}/>
             </Modal>
         </>
     );

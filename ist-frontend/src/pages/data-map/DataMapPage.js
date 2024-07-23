@@ -4,6 +4,7 @@ import {message} from 'antd'
 import {formatMongoField} from '../data-model/methods'
 import * as echarts from 'echarts'
 import {DataModels} from "../../database/data";
+import {mockData} from "../../apis/mockData";
 
 const ModelMapPage = () => {
     const chartRef = useRef(null)
@@ -105,7 +106,8 @@ const ModelMapPage = () => {
             message.error(`加载数据地图失败：${error.message}`)
         })*/
         try {
-            const graphData = modelsToGraph(DataModels)
+            //const graphData = modelsToGraph(DataModels)
+            const graphData = modelsToGraph(mockData.models)
             renderChart(graphData)
         }
         catch (error) {

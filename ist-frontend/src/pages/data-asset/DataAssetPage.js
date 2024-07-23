@@ -3,13 +3,17 @@ import {exportDataSource} from '../../apis/data-model'
 import * as echarts from 'echarts'
 import {formatDataSourceTable, formatDataSourceType} from '../data-source/methods'
 import {Divider, message, Modal} from 'antd'
-import {downloadCSV} from '../../utils/methods'
+import {downloadCSV} from '../DataModeling/DataModel/methods'
 import FilterForm from './components/FilterForm'
 import {getDataAssets} from "../../apis/data-asset";
 import {formatModelModal, formatModelType} from "../data-model/methods";
 import {DataAssets, DataModels} from "../../database/data";
+import {mockData} from "../../apis/mockData";
 
 const DataAssetPage = () => {
+    const [dataModel, setDataModel] = useState([])
+
+    const [dataModelInfo, setDataModelInfo] = useState({})
     const chartRef = useRef(null)
     let chart = null
     const [filterParams, setFilterParams] = useState({
@@ -20,6 +24,28 @@ const DataAssetPage = () => {
         description: undefined,
         tag: undefined
     })
+    const exportModelData = () => {
+        if (dataModelInfo.type === 3) {
+            downloadCSV(dataModel.data, `${dataModelInfo.modelName}.csv`)
+        } else {
+            const loading = message.loading('正在导出全量数据...')
+            downloadCSV(dataModel, `${dataModelInfo.modelName}.csv`)
+            // exportDataModel(modelId).then(data => {
+            //     downloadCSV(data.data, `${data.model.modelName}.csv`)
+            //     loading()
+            // }).catch(error => {
+            //     loading()
+            //     message.error(`导出模型数据失败：${error.message}`)
+            // })
+        }
+    }
+
+    //TODO:恢复注释
+    const exportFile = () => {
+        const loading = message.loading('正在导出文件数据...')
+        //downloadZip(`/dataModelService/getZip/${modelId}`)
+        loading()
+    }
 
     const modelsToGraph = (models) => {
         const modelToNode = (model) => ({
@@ -159,9 +185,18 @@ const DataAssetPage = () => {
         try {
             let filteredGraphData
             if (Object.values(params).every(value => value === '')) {
-                filteredGraphData = modelsToGraph(DataAssets);
+                //filteredGraphData = modelsToGraph(DataAssets);
+                filteredGraphData = modelsToGraph(mockData.models);
             } else {
-                filteredGraphData = DataAssets.filter(data => {
+               /* filteredGraphData = DataAssets.filter(data => {
+                    for (const key in params) {
+                        if (data[key] !== params[key] && params[key] !== '') {
+                            return false;
+                        }
+                    }
+                    return true;
+                });*/
+                filteredGraphData = mockData.models.filter(data => {
                     for (const key in params) {
                         if (data[key] !== params[key] && params[key] !== '') {
                             return false;

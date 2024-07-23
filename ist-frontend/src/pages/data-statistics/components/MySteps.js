@@ -5,7 +5,7 @@ import BarChartCommon from "./BarChartCommon";
 
 
 
-const MySteps = ({info, current, setCurrent}) => {
+const MySteps = ({info, current, setCurrent, handleClose}) => {
     const { token } = theme.useToken();
     //const [current, setCurrent] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -126,12 +126,12 @@ const MySteps = ({info, current, setCurrent}) => {
             >
                 {current < steps.length - 1 && (
                     <Button type="primary" onClick={() => next()}>
-                        Next
+                        下一步
                     </Button>
                 )}
                 {current === steps.length - 1 && (
-                    <Button type="primary" onClick={() => message.success('Processing complete!')} loading={loading}>
-                        Done
+                    <Button type="primary" onClick={() => handleClose()} loading={loading}>
+                        完成
                     </Button>
                 )}
                 {current > 0 && (
@@ -142,7 +142,7 @@ const MySteps = ({info, current, setCurrent}) => {
                         onClick={() => prev()}
                         loading={loading}
                     >
-                        Previous
+                        上一步
                     </Button>
                 )}
             </div>
