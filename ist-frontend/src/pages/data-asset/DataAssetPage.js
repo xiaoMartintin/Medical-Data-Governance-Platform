@@ -3,7 +3,7 @@ import {exportDataSource} from '../../apis/data-model'
 import * as echarts from 'echarts'
 import {formatDataSourceTable, formatDataSourceType} from '../data-source/methods'
 import {Divider, message, Modal} from 'antd'
-import {downloadCSV} from '../DataModeling/DataModel/methods'
+import {downloadCSV} from '../data-model/DataModel/methods'
 import FilterForm from './components/FilterForm'
 import {getDataAssets} from "../../apis/data-asset";
 import {formatModelModal, formatModelType} from "../data-model/DataModel/methods";
@@ -11,9 +11,6 @@ import {DataAssets, DataModels} from "../../database/data";
 import {mockData} from "../../apis/mockData";
 
 const DataAssetPage = () => {
-    const [dataModel, setDataModel] = useState([])
-
-    const [dataModelInfo, setDataModelInfo] = useState({})
     const chartRef = useRef(null)
     let chart = null
     const [filterParams, setFilterParams] = useState({
@@ -24,7 +21,7 @@ const DataAssetPage = () => {
         description: undefined,
         tag: undefined
     })
-    const exportModelData = () => {
+    const exportModelData = (dataModel, dataModelInfo) => {
         if (dataModelInfo.type === 3) {
             downloadCSV(dataModel.data, `${dataModelInfo.modelName}.csv`)
         } else {
@@ -146,7 +143,28 @@ const DataAssetPage = () => {
                     title: `数据源导出`,
                     content: `是否导出数据源 '${item.data.name}' ？`,
                     onOk() {
-                        exportData(item.data.modelId, item.data.id)
+                        //exportData(item.data.modelId, item.data.id)
+                        let DataModel, DataModelInfo
+                        if(item.data !== null){
+                            switch (parseInt(item.data.modelId)) {
+                                case 0:
+                                    DataModel = mockData.diseaseTable;
+                                    break;
+                                case 1:
+                                    DataModel =mockData.studyTable;
+                                    break;
+                                case 2:
+                                    DataModel =mockData.diseaseStudyTable;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            DataModelInfo = mockData.models[item.data.modelId]
+                            if (item.data.type === 3) {
+                                exportFile()
+                            }
+                            else exportModelData(DataModel,DataModelInfo)
+                        }
                     },
                 })
             }
