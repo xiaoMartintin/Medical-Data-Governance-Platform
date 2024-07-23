@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import {Button, Modal, Table} from 'antd';
 import DataAssetButton from "./DataAssetButton";
+import html2canvas from "html2canvas";
+import * as jspdf from "jspdf";
+import * as echarts from "echarts";
 const DetailButton = ({detail}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -12,6 +16,31 @@ const DetailButton = ({detail}) => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+
+    /*const exportData = () => {
+        html2canvas(chartRefs[1].current).then(canvas => {
+            canvas.toBlob(function(blob) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    const imgData = reader.result; // This will be the base64 string
+                    const pdf = new jspdf.jsPDF({
+                        orientation: 'portrait',
+                        unit: 'px',
+                        format: [canvas.width, canvas.height]
+                    });
+
+                    // Instead of getImageProperties, we can use the canvas dimensions directly
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                    // Use the base64 string (imgData)
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save('exported-page.pdf');
+                };
+                reader.readAsDataURL(blob); // Convert blob to base64 string
+            }, 'image/png');
+        });
+    }*/
     return (
         <>
             <Button type="primary" onClick={showModal}>
@@ -46,13 +75,7 @@ const DetailButton = ({detail}) => {
                                         DiseaseID:detail.ID}}>
                                     </DataAssetButton>: record.toString()}</div>)
                             })
-                    ).concat({
-                        title: "Export",
-                        dataIndex: "studies",
-                        render: () => (
-                            <></>
-                        )
-                    })  :Object.keys(detail).map(
+                    ) :Object.keys(detail).map(
                             (item) => ({
                                 title:item,
                                 dataIndex: item,

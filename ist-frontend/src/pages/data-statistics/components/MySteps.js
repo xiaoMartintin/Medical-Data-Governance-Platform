@@ -2,6 +2,10 @@ import React, {useRef, useState} from 'react';
 import { Button, message, Steps, theme } from 'antd';
 import PieChartCommon from "./PieChartCommon";
 import BarChartCommon from "./BarChartCommon";
+import html2canvas from "html2canvas";
+import { saveAs } from 'file-saver';
+import * as jspdf from "jspdf";
+import JSZip from "jszip";
 
 
 
@@ -11,9 +15,40 @@ const MySteps = ({info, current, setCurrent, handleClose}) => {
     const [loading, setLoading] = useState(false);
     const chartRefs = [useRef(null),useRef(null),useRef(null)]
     const chartInstances = [useRef(null),useRef(null),useRef(null)];
+    const [exportGraphs, setExportGraphs] = useState([])
     const TempAges = info.studies.map(item => parseInt(item.ExamAge));
+    const [pdfs, setPdfs] = useState([])
     const minAge = Math.min(...TempAges);
     const maxAge = Math.max(...TempAges);
+
+    const handleExportGraphChange = (data,elementName) => {
+        let NewExportGraphs = exportGraphs;
+        NewExportGraphs = NewExportGraphs.concat(data);
+        setExportGraphs(NewExportGraphs);
+        html2canvas(data).then(canvas => {
+            canvas.toBlob(function(blob) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    const imgData = reader.result; // This will be the base64 string
+                    const pdf = new jspdf.jsPDF({
+                        orientation: 'portrait',
+                        unit: 'px',
+                        format: [canvas.width, canvas.height]
+                    });
+
+
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                    // Use the base64 string (imgData)
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    let newPdfs = pdfs.concat({data:pdf,name:elementName});
+                    setPdfs(newPdfs)
+                };
+                reader.readAsDataURL(blob);
+            }, 'image/png');
+        });
+    }
 
     const rangeSize = Math.ceil((maxAge - minAge) / 5);
 
@@ -93,14 +128,14 @@ const MySteps = ({info, current, setCurrent, handleClose}) => {
         setTimeout(() => {
             setCurrent(current + 1);
             setLoading(false);
-        }, 1000);
+        }, 0);
     };
     const prev = () => {
         setLoading(true);
         setTimeout(() => {
             setCurrent(current - 1);
             setLoading(false);
-        }, 1000);
+        }, 0);
     };
     const items = steps.map((item) => ({
         key: item.title,
@@ -125,13 +160,68 @@ const MySteps = ({info, current, setCurrent, handleClose}) => {
                 }}
             >
                 {current < steps.length - 1 && (
-                    <Button type="primary" onClick={() => next()}>
+                    <Button type="primary" onClick={() => {
+                        let elementName
+                        switch (current){
+                            case 0: elementName = "age_bar_chart"+info.DiseaseID;break;
+                            case 1: elementName = "address_pie_chart"+info.DiseaseID; break;
+                            default:break;
+                        }
+                        handleExportGraphChange(document.querySelector("#"+elementName),elementName);
+                        next()
+                    }}>
                         下一步
                     </Button>
                 )}
-                {current === steps.length - 1 && (
-                    <Button type="primary" onClick={() => handleClose()} loading={loading}>
-                        完成
+                {current === steps.length - 1 &&(
+                    <Button type="primary" onClick={() => {
+                        let NewExportGraphs = exportGraphs;
+                        const data = document.querySelector("#gender_pie_chart"+info.DiseaseID);
+                        NewExportGraphs = NewExportGraphs.concat(data);
+                        setExportGraphs(NewExportGraphs);
+                        html2canvas(data).then(canvas => {
+                            canvas.toBlob(function(blob) {
+                                const reader = new FileReader();
+                                reader.onloadend = function() {
+                                    const imgData = reader.result; // This will be the base64 string
+                                    const pdf = new jspdf.jsPDF({
+                                        orientation: 'portrait',
+                                        unit: 'px',
+                                        format: [canvas.width, canvas.height]
+                                    });
+
+
+                                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                                    // Use the base64 string (imgData)
+                                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                                    let newPdfs = pdfs.concat({data:pdf,name:"gender_pie_chart"+info.DiseaseID});
+                                    setPdfs(newPdfs);
+                                    // 创建一个 ZIP 对象
+                                    const zip = new JSZip();
+
+                                    // 将每个 PDF 添加到 ZIP 中
+                                    newPdfs.forEach(item => {
+                                        zip.file(item.name + ".pdf", item.data.output('blob'));
+                                    });
+
+                                    // 生成 ZIP 文件并下载
+                                    zip.generateAsync({ type: "blob" })
+                                        .then(function (content) {
+                                            // 使用 FileSaver.js 来下载 ZIP 文件
+                                            saveAs(content, "pdfs.zip");
+                                        });
+
+                                    handleClose()
+                                    //pdf.save('exported-page.pdf');
+                                };
+                                reader.readAsDataURL(blob);
+                            }, 'image/png');
+                        });
+
+                    }} loading={loading}>
+                        导出
                     </Button>
                 )}
                 {current > 0 && (

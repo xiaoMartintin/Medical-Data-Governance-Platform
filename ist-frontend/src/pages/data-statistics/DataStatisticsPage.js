@@ -68,7 +68,6 @@ class DataStatisticsPage extends React.Component{
     }
     onExpand = (expanded, record) => {
         const { expandRowKeys } = this.state;
-        console.log(expandRowKeys)
         if (expanded) {
             expandRowKeys.push(record.id);
         } else {
