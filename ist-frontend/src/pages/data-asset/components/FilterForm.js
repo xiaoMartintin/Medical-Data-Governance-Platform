@@ -1,7 +1,7 @@
 import {Button, Form, Input, Select} from "antd";
 import React from "react";
 import '../../../style/InlineForm.css'
-import config from '../../data-model/config'
+import config from '../../data-model/DataModel/config'
 
 const {Option} = Select
 
