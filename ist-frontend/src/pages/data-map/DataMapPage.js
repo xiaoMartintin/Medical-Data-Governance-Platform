@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react'
 import {getDataModels} from '../../apis/data-model'
 import {message} from 'antd'
-import {formatMongoField} from '../data-model/methods'
+import {formatMongoField} from '../data-model/DataModel/methods'
 import * as echarts from 'echarts'
 import {DataModels} from "../../database/data";
 

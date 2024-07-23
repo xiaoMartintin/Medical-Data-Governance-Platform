@@ -6,7 +6,7 @@ import {Divider, message, Modal} from 'antd'
 import {downloadCSV} from '../../utils/methods'
 import FilterForm from './components/FilterForm'
 import {getDataAssets} from "../../apis/data-asset";
-import {formatModelModal, formatModelType} from "../data-model/methods";
+import {formatModelModal, formatModelType} from "../data-model/DataModel/methods";
 import {DataAssets, DataModels} from "../../database/data";
 
 const DataAssetPage = () => {

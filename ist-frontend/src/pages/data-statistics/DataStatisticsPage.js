@@ -6,7 +6,7 @@ import {Button, Divider, message, Table} from "antd";
 import config from "../data-source/config";
 import RankingChart from "./components/RankingChart";
 import {DataAssets} from "../../database/data";
-import {formatModelType} from "../data-model/methods";
+import {formatModelType} from "../data-model/DataModel/methods";
 import {formatDataSourceType} from "../data-source/methods";
 import {diseases} from "../../database/disease";
 import {diseaseStudies} from "../../database/diseasestudy";
