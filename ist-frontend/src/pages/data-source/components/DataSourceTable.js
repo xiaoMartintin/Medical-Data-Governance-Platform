@@ -2,7 +2,7 @@ import {Button, message, Modal, Popconfirm, Table, Tag} from 'antd'
 import React, {useState} from 'react'
 import {deleteDataSource, getMetaFields} from '../../../apis/data-source'
 import {formatDataSourceTable, formatDataSourceType} from '../methods'
-import {formatMongoField, formatVariableType} from '../../data-model/methods'
+import {formatMongoField, formatVariableType} from '../../data-model/DataModel/methods'
 
 const DataSourceTable = ({dataSources, onFinishDelete}) => {
     const fieldColumns = [{title: '字段名称', dataIndex: 'name', key: 'name', render: formatMongoField},

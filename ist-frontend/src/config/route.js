@@ -16,9 +16,9 @@ import DataStatisticsPage from "../pages/data-statistics/DataStatisticsPage";
 import DataDictionaryVisualizePage from "../pages/data-dictionary/DataDictionaryVisualizePage";
 import DataDictionarySearchPage from "../pages/data-dictionary/DataDictionarySearchPage";
 import DataDictionaryManagePage from "../pages/data-dictionary/DataDictionaryManagePage";
-import ResourceCatalogPage from "../pages/DataModeling/ResourceCatalog/ResourceCatalogPage";
-import DataModelDetailPage from "../pages/DataModeling/DataModel/DataModelDetailPage";
-import DataModelPage from "../pages/DataModeling/DataModel/DataModelPage";
+import ResourceCatalogPage from "../pages/data-model/ResourceCatalog/ResourceCatalogPage";
+import DataModelDetailPage from "../pages/data-model/DataModel/DataModelDetailPage";
+import DataModelPage from "../pages/data-model/DataModel/DataModelPage";
 
 const routes = [
     {
