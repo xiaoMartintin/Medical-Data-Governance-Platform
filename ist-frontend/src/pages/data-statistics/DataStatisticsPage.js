@@ -12,6 +12,7 @@ import {diseases} from "../../database/disease";
 import {diseaseStudies} from "../../database/diseasestudy";
 import {studies} from "../../database/study";
 import DetailButton from "./components/DetailButton";
+import FilterForm from "./components/FilterForm";
 const columns = [
     {
         title: '资产id',
@@ -63,7 +64,16 @@ class DataStatisticsPage extends React.Component{
                     radius: '50%',
                     data:[]
                 }
-            ]
+            ],
+            filterParams: {
+                modelName: undefined,
+                modal: undefined,
+                type: undefined,
+                domain: undefined,
+                description: undefined,
+                tag: undefined
+            },
+            tableData:[]
         }
     }
     onExpand = (expanded, record) => {
@@ -77,6 +87,25 @@ class DataStatisticsPage extends React.Component{
             }
         }
         this.setState({ expandRowKeys });
+    }
+    handleFilterParamsChange = (data) => {
+        const params = {}
+        const filterParams = data;
+        if(filterParams) Object.keys(filterParams).forEach(key => {
+            params[key] = filterParams[key] === null || filterParams[key] === undefined ? '' : filterParams[key];
+        });
+        const dataAssets_ = this.state.dataAssets;
+        let new_dataAssets_ = dataAssets_.filter(data => {
+            for (const key in params) {
+                if (data[key] !== params[key] && params[key] !== '') {
+                    return false;
+                }
+            }
+            return true;
+        });
+        this.setState({
+            tableData:new_dataAssets_
+        })
     }
 
     getPieChartSeriesData = (data) => {
@@ -172,7 +201,8 @@ class DataStatisticsPage extends React.Component{
                         radius: '50%',
                         data: series_data
                     }
-                ]
+                ],
+                tableData:dataAssets_
             })
         }
         catch (error) {
@@ -192,10 +222,48 @@ class DataStatisticsPage extends React.Component{
                     radius: '50%',
                     data:[]
                 }
-            ]
+            ],
+            filterParams: {
+            modelName: undefined,
+                modal: undefined,
+                type: undefined,
+                domain: undefined,
+                description: undefined,
+                tag: undefined
+        },
+            tableData:[]
         }
-        this.fetchAsset()
+        this.fetchAsset();
+        /*this.fetchAsset().then(r => {})
+        setInterval(() => {
+            this.fetchAsset().then(r => {});
+        }, 500); // 每5秒拉取数据*/
     }
+
+    componentWillUnmount() {
+        this.state = {
+            dataAssets:[],
+            PieChart_Series:[
+                {
+                    name: '病种',
+                    type: 'pie',
+                    radius: '50%',
+                    data:[]
+                }
+            ],
+            filterParams: {
+                modelName: undefined,
+                modal: undefined,
+                type: undefined,
+                domain: undefined,
+                description: undefined,
+                tag: undefined
+            },
+            tableData:[]
+        }
+        //this.fetchAsset()
+    }
+
     render() {
         if (this.state.PieChart_Series[0].data.length === 0 || this.state.dataAssets.length === 0) {
             return <></>;
@@ -216,9 +284,10 @@ class DataStatisticsPage extends React.Component{
                     </div>
                     <Divider/>
                     <div className="Bottom_Container" style={{ flex: 1 }}>
+                        <FilterForm onFilterAsset={this.handleFilterParamsChange}></FilterForm>
                         <h3>仅展示前<text style={{color:'rgb(19,189,149)'}}>100</text>条数据资产</h3>
                         <Table columns={columns}
-                              dataSource={this.state.dataAssets.slice(0,100)}
+                              dataSource={this.state.tableData.slice(0,100)}
                               rowKey="id"
                               expandable={{
                                   expandedRowRender: record => (

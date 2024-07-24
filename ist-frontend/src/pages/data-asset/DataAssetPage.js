@@ -78,7 +78,6 @@ const DataAssetPage = () => {
 
     const renderChart = (data) => {
         if (!chartRef.current) return
-        console.log(data)
         chart = echarts.init(chartRef.current)
         chart.showLoading()
         chart.hideLoading()
