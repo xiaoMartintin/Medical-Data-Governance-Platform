@@ -6,6 +6,7 @@ import html2canvas from "html2canvas";
 import { saveAs } from 'file-saver';
 import * as jspdf from "jspdf";
 import JSZip from "jszip";
+import {diseases} from "../../../database/disease";
 
 
 
@@ -200,21 +201,29 @@ const MySteps = ({info, current, setCurrent, handleClose}) => {
                                     setPdfs(newPdfs);
                                     // 创建一个 ZIP 对象
                                     const zip = new JSZip();
+                                    const keys = Object.keys(info.studies[0])
+                                    const csvHeader = keys.join(',');
+                                    const csvRows = info.studies.map(row => keys.map(key => row[key]).join(','));
+                                    const BOM = '\uFEFF'; // 添加 BOM
+                                    const csvContent = [BOM + csvHeader, ...csvRows].join('\n');
+                                    let reportName = diseases.find(item => item.ID=== info.DiseaseID).Name
+                                    zip.file(reportName+'报告.csv',csvContent)
 
                                     // 将每个 PDF 添加到 ZIP 中
                                     newPdfs.forEach(item => {
                                         zip.file(item.name + ".pdf", item.data.output('blob'));
                                     });
 
+
                                     // 生成 ZIP 文件并下载
                                     zip.generateAsync({ type: "blob" })
                                         .then(function (content) {
                                             // 使用 FileSaver.js 来下载 ZIP 文件
-                                            saveAs(content, "pdfs.zip");
+                                            let reportName = diseases.find(item => item.ID=== info.DiseaseID).Name
+                                            saveAs(content, reportName+"报告.zip");
                                         });
 
-                                    handleClose()
-                                    //pdf.save('exported-page.pdf');
+                                    handleClose();
                                 };
                                 reader.readAsDataURL(blob);
                             }, 'image/png');
