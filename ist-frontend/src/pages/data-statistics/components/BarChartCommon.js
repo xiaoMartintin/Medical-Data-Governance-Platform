@@ -28,7 +28,6 @@ const BarChartCommon = ({ dataSource, text, elementName}) => {
 
         const chartInstance = echarts.init(document.getElementById(elementName));
         chartInstance.setOption(option);
-
         const handleResize = () => {
             resizeChart();
         };
