@@ -98,6 +98,20 @@ const DataModelDetailPage = () => {
         }
     ]
 
+    const dataDictionaryColumns = [
+        {title: 'ID', dataIndex: 'dataSourceId', key: 'dataSourceId'},
+
+        {
+            title: '操作', key: 'action', fixed: 'right', render: (_, __, idx) => (
+                <>
+                    <Button style={{marginRight: 10}} onClick={() => {
+                        showFieldMap(idx)
+                    }}>查看映射</Button>
+                </>
+            )
+        }
+    ]
+
     const ruleColumns = [{
         title: '字段名', children: [{
             title: '左字段',
@@ -232,7 +246,7 @@ const DataModelDetailPage = () => {
                                 <Tag key={idx} style={{marginRight: 8}}>{item}</Tag>
                             )))}
                         </Descriptions.Item>
-                        <Descriptions.Item label='模态'>{formatModelModal(dataModelInfo.modal)}</Descriptions.Item>
+                        {/*<Descriptions.Item label='模态'>{formatModelModal(dataModelInfo.modal)}</Descriptions.Item>*/}
                         <Descriptions.Item label='类型'>{formatModelType(dataModelInfo.type)}</Descriptions.Item>
                         <Descriptions.Item label='业务域'>{dataModelInfo.domain}</Descriptions.Item>
                         <Descriptions.Item label='描述'>{dataModelInfo.description}</Descriptions.Item>

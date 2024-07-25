@@ -15,15 +15,19 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
     const modelTypes = config.modelTypes
     const variableTypes = config.variableTypes
     const rules = config.modelRules
+    const dataCategories = config.dataCategories
 
     const [currentStep, setCurrentStep] = useState(0)
     const [form, setForm] = useState({})
     // Step 1
     const [infoForm] = Form.useForm()
     // Step 2
+    const [categoryForm] = Form.useForm()
+    const [selectedCategory, setSelectedCategory] = useState('');
+    // Step 3
     const [fieldForm] = Form.useForm()
     const [fieldsData, setFieldsData] = useState([])
-    // Step 3
+    // Step 4
     const [currentRule, setCurrentRule] = useState({})
     const ruleForms = Array.from({length: 3}).map(() => {
         // TODO: Fix
@@ -32,7 +36,7 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
         return ruleForm
     })
     const [rulesData, setRulesData] = useState([])
-    // Step 4
+    // Step 5
     const [tags, setTags] = useState([])
     const [recommendedTags, setRecommendedTags] = useState([])
     const [inputTag, setInputTag] = useState('')
@@ -53,43 +57,49 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
         render: (_, row) => (<Button danger onClick={() => handleDeleteField(row.key)}>删除</Button>)
     }]
 
-    const ruleColumns = [{
-        title: '字段名', children: [{
-            title: '左字段',
-            dataIndex: 'leftFieldName',
-            key: 'leftFieldName',
-            align: 'center',
-            onCell: (item) => ({
-                colSpan: item.rightFieldName ? 1 : 2,
-            })
-        }, {
-            title: '右字段',
-            dataIndex: 'rightFieldName',
-            key: 'rightFieldName',
-            align: 'center',
-            onCell: (item) => ({
-                colSpan: item.rightFieldName ? 1 : 0,
-            })
-        }],
-    }, {
-        dataIndex: 'ruleType',
-        key: 'ruleType',
-        title: '类型',
-        render: (ruleType) => <Tag>{formatRuleType(ruleType)}</Tag>,
-    }, {
-        dataIndex: 'detail',
-        key: 'detail',
-        title: '详情',
-    }, {
-        dataIndex: 'description',
-        key: 'description',
-        title: '描述',
-    }, {
-        title: '操作',
-        key: 'action',
-        fixed: 'right',
-        render: (_, row) => (<Button danger onClick={() => handleDeleteRule(row.key)}>删除</Button>)
-    }]
+
+    // const ruleColumns = [{
+    //     title: '字段名', children: [{
+    //         title: '左字段',
+    //         dataIndex: 'leftFieldName',
+    //         key: 'leftFieldName',
+    //         align: 'center',
+    //         onCell: (item) => ({
+    //             colSpan: item.rightFieldName ? 1 : 2,
+    //         })
+    //     }, {
+    //         title: '右字段',
+    //         dataIndex: 'rightFieldName',
+    //         key: 'rightFieldName',
+    //         align: 'center',
+    //         onCell: (item) => ({
+    //             colSpan: item.rightFieldName ? 1 : 0,
+    //         })
+    //     }],
+    // }, {
+    //     dataIndex: 'ruleType',
+    //     key: 'ruleType',
+    //     title: '类型',
+    //     render: (ruleType) => <Tag>{formatRuleType(ruleType)}</Tag>,
+    // }, {
+    //     dataIndex: 'detail',
+    //     key: 'detail',
+    //     title: '详情',
+    // }, {
+    //     dataIndex: 'description',
+    //     key: 'description',
+    //     title: '描述',
+    // }, {
+    //     title: '操作',
+    //     key: 'action',
+    //     fixed: 'right',
+    //     render: (_, row) => (<Button danger onClick={() => handleDeleteRule(row.key)}>删除</Button>)
+    // }]
+
+    const handleCategoryChange = (value) => {
+        setSelectedCategory(value);
+        console.log(selectedCategory)
+    }
 
     const handleOk = () => {
         if (currentStep === 0) {
@@ -102,6 +112,34 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
                     message.error('请正确填写基本信息')
                 })
         } else if (currentStep === 1) {
+            // if (fieldsData.length > 0) {
+            //     setForm({
+            //         ...form, fields: fieldsData.map(field => {
+            //             const {key, ...rest} = field
+            //             return rest
+            //         })
+            //     })
+            //     setCurrentStep(currentStep + 1)
+            // } else {
+            //     message.error('请输入至少一个字段')
+            // }
+            categoryForm.validateFields()
+                .then(data => {
+                    setForm({...form, ...data})
+                    setCurrentStep(currentStep + 1)
+                })
+                .catch(_ => {
+                    message.error('请选择数据分类')
+                })
+        } else if (currentStep === 2) {
+            // setForm({
+            //     ...form, rules: rulesData.map(rule => {
+            //         const {key, detail, ...rest} = rule
+            //         return rest
+            //     })
+            // })
+            // handleRecommendTags()
+            // setCurrentStep(currentStep + 1)
             if (fieldsData.length > 0) {
                 setForm({
                     ...form, fields: fieldsData.map(field => {
@@ -113,15 +151,6 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
             } else {
                 message.error('请输入至少一个字段')
             }
-        } else if (currentStep === 2) {
-            setForm({
-                ...form, rules: rulesData.map(rule => {
-                    const {key, detail, ...rest} = rule
-                    return rest
-                })
-            })
-            handleRecommendTags()
-            setCurrentStep(currentStep + 1)
         } else if (currentStep === 3) {
             const loading = message.loading('正在添加数据模型...')
             addDataModel({...form, tag: tags}).then(_ => {
@@ -142,7 +171,10 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
         setForm({})
         infoForm.resetFields()
         fieldForm.resetFields()
+        categoryForm.resetFields()
         ruleForms.forEach(form => form.resetFields())
+
+        setSelectedCategory('')
 
         setFieldsData([])
         setRulesData([])
@@ -166,54 +198,54 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
         setFieldsData(fieldsData.filter(field => field.key !== key))
     }
 
-    const handleRuleChange = (val) => {
-        setCurrentRule(rules.find(item => item.value === val))
-    }
-
-    const handleAddRule = (data) => {
-        const detail = formatRuleDetail(currentRule, data)
-        setRulesData([...rulesData, {ruleType: currentRule.value, rule: data, key: Date.now(), detail}])
-        ruleForms.forEach(form => form.resetFields())
-    }
-
-    const handleDeleteRule = (key) => {
-        setRulesData(rulesData.filter(rule => rule.key !== key))
-    }
-
-    const handleInputTagChange = (e) => {
-        setInputTag(e.target.value)
-    }
-
-    const handleInputTagConfirm = () => {
-        if (inputTag && tags.indexOf(inputTag) === -1) {
-            setTags([...tags, inputTag])
-        }
-        setInputTag('')
-    }
-
-    const handleDeleteTag = (removedTag) => {
-        const newTags = tags.filter(tag => tag !== removedTag)
-        setTags(newTags)
-    }
-
-    const handleAddRecommendedTag = (tag) => {
-        if (tags.indexOf(tag) === -1) {
-            setTags([...tags, tag])
-        }
-    }
-
-    const handleRecommendTags = () => {
-        const loading = message.loading('正在推荐标签...', 0)
-        querySimilarTags({
-            fields: fieldsData.map(item => item.name)
-        }).then(data => {
-            loading()
-            setRecommendedTags(data.data.tags)
-        }).catch(error => {
-            loading()
-            message.error(`标签推荐失败：${error.message}`)
-        })
-    }
+    // const handleRuleChange = (val) => {
+    //     setCurrentRule(rules.find(item => item.value === val))
+    // }
+    //
+    // const handleAddRule = (data) => {
+    //     const detail = formatRuleDetail(currentRule, data)
+    //     setRulesData([...rulesData, {ruleType: currentRule.value, rule: data, key: Date.now(), detail}])
+    //     ruleForms.forEach(form => form.resetFields())
+    // }
+    //
+    // const handleDeleteRule = (key) => {
+    //     setRulesData(rulesData.filter(rule => rule.key !== key))
+    // }
+    //
+    // const handleInputTagChange = (e) => {
+    //     setInputTag(e.target.value)
+    // }
+    //
+    // const handleInputTagConfirm = () => {
+    //     if (inputTag && tags.indexOf(inputTag) === -1) {
+    //         setTags([...tags, inputTag])
+    //     }
+    //     setInputTag('')
+    // }
+    //
+    // const handleDeleteTag = (removedTag) => {
+    //     const newTags = tags.filter(tag => tag !== removedTag)
+    //     setTags(newTags)
+    // }
+    //
+    // const handleAddRecommendedTag = (tag) => {
+    //     if (tags.indexOf(tag) === -1) {
+    //         setTags([...tags, tag])
+    //     }
+    // }
+    //
+    // const handleRecommendTags = () => {
+    //     const loading = message.loading('正在推荐标签...', 0)
+    //     querySimilarTags({
+    //         fields: fieldsData.map(item => item.name)
+    //     }).then(data => {
+    //         loading()
+    //         setRecommendedTags(data.data.tags)
+    //     }).catch(error => {
+    //         loading()
+    //         message.error(`标签推荐失败：${error.message}`)
+    //     })
+    // }
 
     const validateUniqueField = (_, val) => {
         if (fieldsData.some(field => field.name === val)) {
@@ -226,6 +258,7 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
         <Modal title='添加数据模型' open={visible} onOk={handleOk} onCancel={resetModal} width={800}>
             <Steps current={currentStep} style={{margin: '24px 0'}}>
                 <Step title='基本信息'/>
+                <Step title='数据分类'/>
                 <Step title='字段信息'/>
                 {/*<Step title='质量规则'/>*/}
                 {/*<Step title='标签定义'/>*/}
@@ -253,10 +286,10 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
                         }
                     </Select>
                 </Form.Item>
-                <Form.Item label='业务域' name='domain'
-                           rules={[{required: true, message: '请输入业务域'}]}>
-                    <Input/>
-                </Form.Item>
+                {/*<Form.Item label='业务域' name='domain'*/}
+                {/*           rules={[{required: true, message: '请输入业务域'}]}>*/}
+                {/*    <Input/>*/}
+                {/*</Form.Item>*/}
                 <Form.Item label='数据采集方式' name='realtime' valuePropName='checked' initialValue={false}>
                     <Switch checkedChildren='实时采集' unCheckedChildren='手动采集'/>
                 </Form.Item>
@@ -265,6 +298,95 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
                 </Form.Item>
             </Form>)}
             {currentStep === 1 && (<>
+                <Form layout={'vertical'} form={categoryForm}>
+                    <Form.Item label='数据分类' name='category' rules={[{required: true, message: '请选择数据分类'}]}>
+                        <Select
+                            onChange={handleCategoryChange}
+                            value={selectedCategory ? (dataCategories.find(item => item.value === selectedCategory)?.label || '') : ''}
+                        >
+                            {/*<Option value='1'>诊疗数据</Option>*/}
+                            {/*<Option value='2'>多租户数据</Option>*/}
+                            {/*<Option value='3'>基础字典数据</Option>*/}
+                            {/*<Option value='4'>影像文件</Option>*/}
+                            {/*<Option value='5'>计算类数据</Option>*/}
+                            {dataCategories.map(item => (
+                                <Option key={item.value} value={item.value}>{item.label}</Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    {selectedCategory === '1' && (<>
+                        <Form.Item label='诊疗数据分类' name='subCategory' rules={[{required: true, message: '请选择诊疗数据分类'}]}>
+                            <Select>
+                                {/*<Option value='1'>门诊数据</Option>*/}
+                                {/*<Option value='2'>住院数据</Option>*/}
+                                {/*<Option value='3'>检验数据</Option>*/}
+                                {/*<Option value='4'>检查数据</Option>*/}
+                                {/*<Option value='5'>处方数据</Option>*/}
+                                {dataCategories[0].children.map(item => (
+                                    <Option key={item.value} value={item.value}>{item.label}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </>)}
+                    {selectedCategory === '2' && (<>
+                        <Form.Item label='多租户数据分类' name='subCategory' rules={[{required: true, message: '请选择多租户数据分类'}]}>
+                            <Select>
+                                {/*<Option value='1'>用户数据</Option>*/}
+                                {/*<Option value='2'>订单数据</Option>*/}
+                                {/*<Option value='3'>支付数据</Option>*/}
+                                {/*<Option value='4'>商品数据</Option>*/}
+                                {/*<Option value='5'>评论数据</Option>*/}
+                                {dataCategories[1].children.map(item => (
+                                    <Option key={item.value} value={item.value}>{item.label}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </>)}
+                    {selectedCategory === '3' && (<>
+                        <Form.Item label='基础字典数据分类' name='subCategory' rules={[{required: true, message: '请选择基础字典数据分类'}]}>
+                            <Select>
+                                {/*<Option value='1'>国家数据</Option>*/}
+                                {/*<Option value='2'>省份数据</Option>*/}
+                                {/*<Option value='3'>城市数据</Option>*/}
+                                {/*<Option value='4'>医院数据</Option>*/}
+                                {/*<Option value='5'>科室数据</Option>*/}
+                                {dataCategories[2].children.map(item => (
+                                    <Option key={item.value} value={item.value}>{item.label}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </>)}
+                    {selectedCategory === '4' && (<>
+                        <Form.Item label='影像文件分类' name='subCategory' rules={[{required: true, message: '请选择影像文件分类'}]}>
+                            <Select>
+                                {/*<Option value='1'>CT</Option>*/}
+                                {/*<Option value='2'>MRI</Option>*/}
+                                {/*<Option value='3'>DR</Option>*/}
+                                {/*<Option value='4'>CR</Option>*/}
+                                {/*<Option value='5'>DSA</Option>*/}
+                                {dataCategories[3].children.map(item => (
+                                    <Option key={item.value} value={item.value}>{item.label}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </>)}
+                    {selectedCategory === '5' && (<>
+                        <Form.Item label='计算类数据分类' name='subCategory' rules={[{required: true, message: '请选择计算类数据分类'}]}>
+                            <Select>
+                                {/*<Option value='1'>统计数据</Option>*/}
+                                {/*<Option value='2'>分析数据</Option>*/}
+                                {/*<Option value='3'>预测数据</Option>*/}
+                                {/*<Option value='4'>推荐数据</Option>*/}
+                                {/*<Option value='5'>评分数据</Option>*/}
+                                {dataCategories[4].children.map(item => (
+                                    <Option key={item.value} value={item.value}>{item.label}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </>)}
+                </Form>
+            </>)}
+            {currentStep === 2 && (<>
                 <Table dataSource={fieldsData} columns={fieldColumns} scroll={{x: 'max-content'}} bordered/>
                 <Form layout='vertical' form={fieldForm} style={{marginTop: '20px'}}>
                     <Form.Item name='name' label='字段名称'
