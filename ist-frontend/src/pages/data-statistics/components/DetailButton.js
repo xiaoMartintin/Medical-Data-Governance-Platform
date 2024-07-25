@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import {Button, Modal, Table} from 'antd';
 import DataAssetButton from "./DataAssetButton";
+
 const DetailButton = ({detail}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -12,6 +14,8 @@ const DetailButton = ({detail}) => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+
+
     return (
         <>
             <Button type="primary" onClick={showModal}>
@@ -46,13 +50,7 @@ const DetailButton = ({detail}) => {
                                         DiseaseID:detail.ID}}>
                                     </DataAssetButton>: record.toString()}</div>)
                             })
-                    ).concat({
-                        title: "Export",
-                        dataIndex: "studies",
-                        render: () => (
-                            <></>
-                        )
-                    })  :Object.keys(detail).map(
+                    ) :Object.keys(detail).map(
                             (item) => ({
                                 title:item,
                                 dataIndex: item,

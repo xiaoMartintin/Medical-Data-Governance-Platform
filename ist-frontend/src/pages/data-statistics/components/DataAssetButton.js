@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import {Button, Modal, Table} from 'antd';
 import MySteps from "./MySteps";
 const DataAssetButton = ({info}) => {
@@ -33,7 +33,7 @@ const DataAssetButton = ({info}) => {
                     {Object.values(detail).map((value) =>(<td>{value}</td>))}
                 </tr>
                 </tbody>*/}
-                <MySteps info={info} current={current} setCurrent={setCurrent}/>
+                <MySteps info={info} current={current} setCurrent={setCurrent} handleClose={handleOk}/>
             </Modal>
         </>
     );

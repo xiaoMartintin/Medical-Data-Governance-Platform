@@ -121,7 +121,7 @@ const PieChartCommon  = ( {seriesData,elementName,seriesName, chartRef, chartIns
 
     return (
         <div>
-            <div key={elementName} id={elementName}ref={chartRef} style={{ width: '100%', height: '400px' }}></div>
+            <div key={elementName} id={elementName} ref={chartRef} style={{ width: '100%', height: '400px' }}></div>
         </div>
     );
 }
