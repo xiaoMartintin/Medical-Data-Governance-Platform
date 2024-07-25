@@ -14,6 +14,11 @@ export let mockData = {
             domain: "VNA_VIEW",
             description: "Disease",
             tag: ["Disease"],
+            dictionary: [
+                {
+                    key: '3',
+                }
+            ],
             fields: [
                 {
                     name: "ID",
@@ -105,6 +110,11 @@ export let mockData = {
             domain: "VNA_VIEW",
             description: "Study",
             tag: ["Study"],
+            dictionary: [
+                {
+                    key: '3',
+                }
+            ],
             fields: [
                 {
                     name: "ID",
@@ -196,6 +206,11 @@ export let mockData = {
             domain: "VNA_VIEW",
             description: "DiseaseStudy",
             tag: ["Disease", "Study"],
+            dictionary: [
+                {
+                    key: '3',
+                }
+            ],
             fields: [
                 {
                     name: "ID",
@@ -783,4 +798,5 @@ export let mockData = {
             url: "10.10.16.51 5432 postgres Fieldenginee1r VNA_VIEW_DB"
         },
     ],
+    dictionaries: initialDictionaries,
 };

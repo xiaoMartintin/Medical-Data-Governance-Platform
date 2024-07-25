@@ -107,22 +107,27 @@ const config = {
                 {
                     value: '1',
                     label: '门诊数据',
+                    key: '1-1'
                 },
                 {
                     value: '2',
                     label: '住院数据',
+                    key: '1-2'
                 },
                 {
                     value: '3',
                     label: '检验数据',
+                    key: '1-3'
                 },
                 {
                     value: '4',
                     label: '检查数据',
+                    key: '1-4'
                 },
                 {
                     value: '5',
                     label: '处方数据',
+                    key: '1-5'
                 },
             ],
         },
@@ -132,23 +137,13 @@ const config = {
             children: [
                 {
                     value: '1',
-                    label: '用户数据',
+                    label: '医疗人员数据',
+                    key: '2-1'
                 },
                 {
                     value: '2',
-                    label: '订单数据',
-                },
-                {
-                    value: '3',
-                    label: '支付数据',
-                },
-                {
-                    value: '4',
-                    label: '商品数据',
-                },
-                {
-                    value: '5',
-                    label: '评论数据',
+                    label: '患者数据',
+                    key: '2-2'
                 },
             ],
         },
@@ -159,22 +154,27 @@ const config = {
                 {
                     value: '1',
                     label: '国家数据',
+                    key: '3-1'
                 },
                 {
                     value: '2',
                     label: '省份数据',
+                    key: '3-2'
                 },
                 {
                     value: '3',
                     label: '城市数据',
+                    key: '3-3'
                 },
                 {
                     value: '4',
                     label: '医院数据',
+                    key: '3-4'
                 },
                 {
                     value: '5',
                     label: '科室数据',
+                    key: '3-5'
                 },
             ],
         },
@@ -185,22 +185,27 @@ const config = {
                 {
                     value: '1',
                     label: 'CT',
+                    key: '4-1'
                 },
                 {
                     value: '2',
                     label: 'MRI',
+                    key: '4-2'
                 },
                 {
                     value: '3',
                     label: 'DR',
+                    key: '4-3'
                 },
                 {
                     value: '4',
                     label: 'CR',
+                    key: '4-4'
                 },
                 {
                     value: '5',
                     label: 'DSA',
+                    key: '4-5'
                 },
             ],
         },
@@ -211,22 +216,27 @@ const config = {
                 {
                     value: '1',
                     label: '统计数据',
+                    key: '5-1'
                 },
                 {
                     value: '2',
                     label: '分析数据',
+                    key: '5-2'
                 },
                 {
                     value: '3',
                     label: '预测数据',
+                    key: '5-3'
                 },
                 {
                     value: '4',
                     label: '推荐数据',
+                    key: '5-4'
                 },
                 {
                     value: '5',
                     label: '评分数据',
+                    key: '5-5'
                 },
             ],
         },
