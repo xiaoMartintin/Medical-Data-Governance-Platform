@@ -99,8 +99,9 @@ const DataModelDetailPage = () => {
     ]
 
     const dataDictionaryColumns = [
-        {title: 'ID', dataIndex: 'dataSourceId', key: 'dataSourceId'},
-
+        {title: '字典ID', dataIndex: 'key', key: 'key'},
+        {title: '字典名称', dataIndex: 'name', key: 'name'},
+        {title: '描述', dataIndex: 'description', key: 'description'},
         {
             title: '操作', key: 'action', fixed: 'right', render: (_, __, idx) => (
                 <>
@@ -246,9 +247,9 @@ const DataModelDetailPage = () => {
                                 <Tag key={idx} style={{marginRight: 8}}>{item}</Tag>
                             )))}
                         </Descriptions.Item>
-                        {/*<Descriptions.Item label='模态'>{formatModelModal(dataModelInfo.modal)}</Descriptions.Item>*/}
+                        <Descriptions.Item label='模态'>{formatModelModal(dataModelInfo.modal)}</Descriptions.Item>
                         <Descriptions.Item label='类型'>{formatModelType(dataModelInfo.type)}</Descriptions.Item>
-                        <Descriptions.Item label='业务域'>{dataModelInfo.domain}</Descriptions.Item>
+                        {/*<Descriptions.Item label='业务域'>{dataModelInfo.domain}</Descriptions.Item>*/}
                         <Descriptions.Item label='描述'>{dataModelInfo.description}</Descriptions.Item>
                         <Descriptions.Item
                             label='采集方式'>{dataModelInfo.realtime ? '实时' : '手动'}</Descriptions.Item>
@@ -289,7 +290,7 @@ const DataModelDetailPage = () => {
             {/*           scroll={{x: 'max-content'}} pagination={false} bordered/>*/}
             {/*</div>*/}
             <div style={{marginBottom: 48}}>
-                <h2>绑定数据源</h2>
+                <h2>绑定数据字典</h2>
                 <Modal title='字段映射' open={isModalVisible}
                        onOk={() => {
                            setIsModalVisible(false)
@@ -307,11 +308,21 @@ const DataModelDetailPage = () => {
                            bordered>
                     </Table>
                 </Modal>
-                <Table dataSource={dataModelInfo.dataSources?.map(item => ({...item, key: item.dataSourceId}))}
-                       columns={dataSourceColumns}
-                       scroll={{x: 'max-content'}}
-                       pagination={false}
-                       bordered/>
+                {/*<Table dataSource={dataModelInfo.dataSources?.map(item => ({...item, key: item.dataSourceId}))}*/}
+                {/*       columns={dataSourceColumns}*/}
+                {/*       scroll={{x: 'max-content'}}*/}
+                {/*       pagination={false}*/}
+                {/*       bordered/>*/}
+                <Table dataSource={dataModelInfo.dictionary?.map(item => {
+                    console.log('item: ', item)
+                    const foundDict = mockData.dictionaries.find(dict => dict.key === item.key);
+                    console.log('foundDict: ', foundDict);
+                    return foundDict;
+                })}
+                    columns={dataDictionaryColumns}
+                    scroll={{x: 'max-content'}}
+                    pagination={false}
+                    bordered/>
             </div>
             <div>
                 <h2>数据表</h2>
