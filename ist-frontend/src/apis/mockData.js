@@ -1,4 +1,8 @@
 //TODO:mock
+import {initialDictionaries} from "../pages/data-dictionary/tmp/data";
+
+export let dictionaries = initialDictionaries;
+
 export let mockData = {
     models: [
         {

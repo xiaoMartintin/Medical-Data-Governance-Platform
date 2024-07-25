@@ -75,3 +75,23 @@ export function downloadCSV(data, filename = 'exported_data.csv') {
     link.click()
     document.body.removeChild(link)
 }
+
+export function formatDictionaryDataTypes(type) {
+    switch (type) {
+        case 'integer': case 'bigint':
+            return 'Integer'
+        case 'character varying(64)': case 'character varying(128)':
+            return 'Varchar'
+        case 'boolean':
+            return 'Boolean'
+        case 'timestamp without time zone':
+            return 'Timestamp'
+        default:
+            return type
+    }
+}
+
+export function judgeType(dictionaryType, dataType) {
+    let typeLabel = config.variableTypes.find(item => item.value === dataType)?.label
+    return formatDictionaryDataTypes(dictionaryType) === typeLabel
+}
