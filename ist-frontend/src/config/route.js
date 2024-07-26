@@ -50,7 +50,7 @@ const routes = [
       },
       {
         path: '/document',
-        label: '接口文档生成',
+        label: '文档生成',
         component: <InterfaceDocPage />,
         meta: {
           icon: <FileTextOutlined />
