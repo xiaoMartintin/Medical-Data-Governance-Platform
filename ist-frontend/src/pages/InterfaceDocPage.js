@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Button, Layout, Descriptions, Typography, Select } from 'antd'
 import { DownloadOutlined } from '@ant-design/icons'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 
 const { Title } = Typography
 const { Option } = Select
@@ -117,14 +119,25 @@ const InterfaceDocPage = () => {
 
   const handleDownload = () => {
     if (!selectedStandard) return
-    const content = JSON.stringify(selectedStandard, null, 2)
-    const blob = new Blob([content], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${selectedStandard.name}.json`
-    a.click()
-    URL.revokeObjectURL(url)
+
+    const wb = XLSX.utils.book_new()
+
+    const wsData = [
+      ['Field Name', 'Type', 'Nullable', 'Length', 'Description'],
+      ...selectedStandard.fields.map(field => [
+        field.name,
+        field.type,
+        field.allowNull ? 'Yes' : 'No',
+        field.length || 'N/A',
+        field.description
+      ])
+    ]
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData)
+    XLSX.utils.book_append_sheet(wb, ws, selectedStandard.name)
+
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+    saveAs(new Blob([wbout], { type: 'application/octet-stream' }), `${selectedStandard.name}.xlsx`)
   }
 
   return (
