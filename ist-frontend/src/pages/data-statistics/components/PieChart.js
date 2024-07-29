@@ -44,7 +44,26 @@ const PieChart = ( {seriesData} ) => {
                     name: '病种',
                     type: 'pie',
                     radius: '50%',
-                    data: seriesData.map(item => ({name:item.name,value:item.value}))
+                    data: seriesData
+                        .filter(item => item.value !== 0)
+                        .map(item => ({name:item.name,value:item.value})),
+                    label: {
+                        formatter: function(params) {
+                            if (params.value === 0) {
+                                return '';
+                            } else {
+                                return params.name + ': ' + params.value;
+                            }
+                        }
+                    },
+                    // labelLine: {
+                    //     show: true,
+                    //     formatter: function(params) {
+                    //         return {
+                    //             show: params.value !== 0
+                    //         };
+                    //     }
+                    // }
                 }
             ]
         };

@@ -51,7 +51,9 @@ export function exportDataSource(modelId, sourceId) {
  * @returns {Promise<* | void>}
  */
 export function addDataModel(params) {
-    return post('/dataModelService/addDataModel', params)
+    // return post('/dataModelService/addDataModel', params)
+    // 这里模拟一个返回值
+    return Promise.resolve(params)
 }
 
 /**
