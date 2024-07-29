@@ -21,7 +21,7 @@ const DetailButton = ({detail}) => {
             <Button type="primary" onClick={showModal}>
                 查看详情
             </Button>
-            <Modal title="详情" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="详情" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={1000}>
                 {/*<p>Some contents...</p>
                 <p>Some contents...</p>
                 <p>Some contents...</p>*/}
