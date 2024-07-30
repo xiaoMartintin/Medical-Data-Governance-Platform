@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Upload, Button, Select, Table, Form, Input, Modal, Layout, Space, Row, Col, message, Spin, Popover } from 'antd'
+import { Upload, Button, Select, Card, Form, Input, Modal, Layout, Space, Row, Col, message, Spin } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { submitFile, ocr_ct, ocr_mr } from '../service/file'
 
@@ -9,8 +9,8 @@ const { Content, Header } = Layout
 const PdfPage = () => {
   const [fileList, setFileList] = useState([])
   const [reportType, setReportType] = useState(null)
-  const [editingRecord, setEditingRecord] = useState(null)
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false)
+  const [currentRecord, setCurrentRecord] = useState(null)
+  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false)
   const [isDbModalVisible, setIsDbModalVisible] = useState(false)
   const [ids, setIds] = useState([])
   const [info, setInfo] = useState([])
@@ -38,7 +38,6 @@ const PdfPage = () => {
       const formData = new FormData()
       formData.append('file', fileList[i].originFileObj)
       submitFile(formData, (data) => {
-        //console.log(formData.get('file'))
         if (data) {
           console.log(data)
           newIds.push(data._id)
@@ -119,75 +118,15 @@ const PdfPage = () => {
     setIds([])
   }
 
-  const showEditModal = (record) => {
-    setEditingRecord(record)
-    setIsEditModalVisible(true)
+  const showDetailModal = (record) => {
+    setCurrentRecord(record)
+    setIsDetailModalVisible(true)
   }
 
-  const handleEditSave = () => {
-    form.validateFields()
-      .then(values => {
-        const newData = [...info]
-        const index = newData.findIndex(item => editingRecord.key === item.key)
-        if (index > -1) {
-          const item = newData[index]
-          newData.splice(index, 1, { ...item, ...values, content: { ...editingRecord.content, ...values.content } })
-          setInfo(newData)
-          setEditingRecord(null)
-          setIsEditModalVisible(false)
-        }
-      })
-      .catch(info => {
-        console.log('Validate Failed:', info)
-      })
+  const handleDetailCancel = () => {
+    setCurrentRecord(null)
+    setIsDetailModalVisible(false)
   }
-
-  const handleEditCancel = () => {
-    setEditingRecord(null)
-    setIsEditModalVisible(false)
-  }
-
-  const baseColumns = [
-    {
-      title: 'File Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-      key: 'type',
-    },
-  ]
-
-  //自适应展示column
-  const dynamicColumns = info.length > 0
-    ? Object.keys(info[0].content).map(key => ({
-      title: key.charAt(0).toUpperCase() + key.slice(1),
-      dataIndex: ['content', key],
-      key: key,
-      render: (text) => (
-        <Popover content={text} title={key.charAt(0).toUpperCase() + key.slice(1)}>
-          <span>{text.length > 15 ? `${text.substring(0, 15)}...` : text}</span>
-        </Popover>
-      )
-    }))
-    : []
-
-  const columns = [
-    ...baseColumns,
-    ...dynamicColumns,
-    {
-      title: 'Operation',
-      dataIndex: 'operation',
-      key: 'operation',
-      render: (_, record) => (
-        <Button type='link' onClick={() => showEditModal(record)}>
-          Edit
-        </Button>
-      ),
-    },
-  ]
 
   const handleTestConnection = () => {
     form.validateFields(['dbType', 'dbHost', 'dbPort', 'dbName', 'dbUser', 'dbPassword'])
@@ -204,16 +143,16 @@ const PdfPage = () => {
   const [dbForm] = Form.useForm()
 
   const renderContentFields = () => {
-    if (!editingRecord) return null
+    if (!currentRecord) return null
 
-    return Object.keys(editingRecord.content).map(key => (
+    return Object.keys(currentRecord.content).map(key => (
       <Form.Item
         key={key}
         name={['content', key]}
         label={key.charAt(0).toUpperCase() + key.slice(1)}
         rules={[{ required: true, message: `Please input ${key}!` }]}
       >
-        <Input.TextArea />
+        <Input.TextArea defaultValue={currentRecord.content[key]} readOnly />
       </Form.Item>
     ))
   }
@@ -286,13 +225,18 @@ const PdfPage = () => {
               </Spin>
             </Col>
           </Row>
-          <Table
-            bordered
-            dataSource={info}
-            columns={columns}
-            rowClassName="editable-row"
-            pagination={false}
-          />
+          <Row gutter={[16, 16]}>
+            {info.map(record => (
+              <Col key={record.key} span={8}>
+                <Card
+                  title={record.name}
+                  extra={<Button type='link' onClick={() => showDetailModal(record)}>查看详情</Button>}
+                >
+                  <p>类型: {record.type}</p>
+                </Card>
+              </Col>
+            ))}
+          </Row>
         </Space>
         <Button onClick={handleConfirm} style={{ marginTop: '20px' }}>
           确认并落表
@@ -354,32 +298,12 @@ const PdfPage = () => {
           <Button onClick={handleTestConnection}>测试连接</Button>
         </Modal>
         <Modal
-          title="Edit Record"
-          open={isEditModalVisible}
-          onOk={handleEditSave}
-          onCancel={handleEditCancel}
+          title="Detail Record"
+          open={isDetailModalVisible}
+          onCancel={handleDetailCancel}
+          footer={null}
         >
-          <Form
-            form={form}
-            initialValues={editingRecord}
-          >
-            <Form.Item
-              name="name"
-              label="File Name"
-              rules={[{ required: true, message: 'Please input the file name!' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="type"
-              label="Type"
-              rules={[{ required: true, message: 'Please select the type!' }]}
-            >
-              <Select>
-                <Option value="Type A">Type A</Option>
-                <Option value="Type B">Type B</Option>
-              </Select>
-            </Form.Item>
+          <Form layout="vertical">
             {renderContentFields()}
           </Form>
         </Modal>
