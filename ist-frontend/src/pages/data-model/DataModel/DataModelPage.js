@@ -4,12 +4,14 @@ import {useEffect, useState} from "react";
 import AddDataModel from "./components/AddDataModel";
 import {getDataModels} from "../../../apis/DataModelingApi";
 import DataModelCard from "./components/DataModelCard";
-import {mockData} from "../../../apis/mockData";
+import {mockData} from "../../../apis/mockData_";
+//import {mockData} from "../../../apis/mockData"
 import BindDataSource from "./components/BindDataSource";
 
 const DataModelPage = () => {
     //数据模型所在页面
     const [currentPage, setCurrentPage] = useState(1);
+    const [mockData_, setMockData_] = useState([]);
     const handlePageChange = (page) => {
         setCurrentPage(page)
     }
@@ -54,13 +56,19 @@ const DataModelPage = () => {
 
     useEffect(() => {
         //TODO:目前使用mock数据，待后续补充后端后再修改
+        if (!localStorage.getItem("mockData")){
+            localStorage.setItem("mockData",JSON.stringify(mockData));
+            console.log('mockData已经加载到localStorage中')
+        }
+        const newMockData_ = JSON.parse(localStorage.getItem("mockData"));
+        setMockData_(newMockData_)
         console.log(currentDataModels);
         // getDataModels().then(data => {
         //     setDataModels(data)
         // }).catch(error => {
         //     message.error(`获得模型失败：${error.message}`)
         // })
-        setDataModels(mockData.models);
+        setDataModels(newMockData_.models);
     }, [])
 
     return (

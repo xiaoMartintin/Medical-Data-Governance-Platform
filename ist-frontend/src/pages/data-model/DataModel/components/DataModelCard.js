@@ -54,10 +54,10 @@ const DataModelCard = ({model, onBindModel, onFinishDelete, showOperation = true
             <p>ID: {model.id}</p>
             <p>类型: {formatModelType(model.type)}</p>
             <p>模态: {formatModelModal(model.modal)}</p>
-            {/*<p>业务域: {model.domain}</p>*/}
+            <p>业务域: {model.domain}</p>
             <p>描述: {model.description || '无'}</p>
             <p>采集方式：{model.realtime ? '实时' : '手动'}</p>
-            <p>标签: {model.tag.length > 0 ? model.tag.map((tag, idx) => (
+            <p>标签: {model.tag && model.tag.length > 0 ? model.tag.map((tag, idx) => (
                     <Tag color='blue' key={idx} style={{}}>{tag}</Tag>
                 )
             ) : <Tag style={{margin: '2px 5px'}}>无</Tag>}</p>
