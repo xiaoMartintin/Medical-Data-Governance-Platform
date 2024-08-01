@@ -1,20 +1,22 @@
 import React, { useState } from 'react'
 import { Upload, Button, Select, Card, Form, Input, Modal, Layout, Space, Row, Col, message, Spin } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { submitFile, ocr_ct, ocr_mr } from '../service/file'
+import { submitFile, ocr } from '../service/file'
 
 const { Option } = Select
 const { Content, Header } = Layout
 
 const PdfPage = () => {
   const [fileList, setFileList] = useState([])
-  const [reportType, setReportType] = useState(null)
   const [currentRecord, setCurrentRecord] = useState(null)
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false)
   const [isDbModalVisible, setIsDbModalVisible] = useState(false)
   const [ids, setIds] = useState([])
   const [info, setInfo] = useState([])
   const [loading, setLoading] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [form] = Form.useForm()
+  const [dbForm] = Form.useForm()
 
   const handleBeforeUpload = (file) => {
     setFileList((prevFileList) => [
@@ -60,76 +62,76 @@ const PdfPage = () => {
       message.error("请先上传文件")
       return
     }
-    if (reportType === null) {
-      message.error("请选择一个报告类型")
-      return
-    }
     setLoading(true)
     const json = {
       "ids": ids
     }
-    switch (reportType) {
-      case "CT":
-        ocr_ct(json, (response) => {
-          setLoading(false)
-          if (response.error) {
-            message.error('解析失败')
-          } else if (response) {
-            console.log(response)
-            let tmp = []
-            for (let i = 0; i < response.results.length; i++) {
-              tmp.push({
-                "key": i,
-                "name": fileList[i].originFileObj.name,
-                "type": reportType,
-                "content": response.results[i]
-              })
-            }
-            setInfo(tmp)
-            message.success('解析成功')
-          }
-        })
-        break
-      case "MR":
-        ocr_mr(json, (response) => {
-          setLoading(false)
-          if (response.error) {
-            message.error('解析失败')
-          } else if (response) {
-            console.log(response)
-            let tmp = []
-            for (let i = 0; i < response.results.length; i++) {
-              tmp.push({
-                "key": i,
-                "name": fileList[i].originFileObj.name,
-                "type": reportType,
-                "content": response.results[i]
-              })
-            }
-            setInfo(tmp)
-            message.success('解析成功')
-          }
-        })
-        break
-      default:
-        break
-    }
+    ocr(json, (response) => {
+      setLoading(false)
+      if (response.error) {
+        message.error('解析失败')
+      } else if (response) {
+        console.log(response)
+        let tmp = []
+        for (let i = 0; i < response.results.length; i++) {
+          tmp.push({
+            "key": i,
+            "name": fileList[i].originFileObj.name,
+            "content": response.results[i]
+          })
+        }
+        setInfo(tmp)
+        message.success('解析成功')
+      }
+    })
     setFileList([])
     setIds([])
   }
 
   const showDetailModal = (record) => {
     setCurrentRecord(record)
+    form.setFieldsValue({ content: record.content })
     setIsDetailModalVisible(true)
+    setIsEditing(false)
   }
 
   const handleDetailCancel = () => {
-    setCurrentRecord(null)
-    setIsDetailModalVisible(false)
+    if (isEditing) {
+      Modal.confirm({
+        title: '确认取消修改?',
+        content: '您有未保存的修改，确认要取消吗？',
+        onOk: () => {
+          setIsDetailModalVisible(false)
+          setIsEditing(false)
+          form.resetFields()
+        }
+      })
+    } else {
+      setIsDetailModalVisible(false)
+    }
+  }
+
+  const handleSaveChanges = () => {
+    form.validateFields().then((values) => {
+      Modal.confirm({
+        title: '确认保存修改?',
+        content: '您确认要保存这些修改吗？',
+        onOk: () => {
+          // 模拟保存的逻辑
+          const updatedRecord = { ...currentRecord, content: values.content }
+          setInfo((prevInfo) => prevInfo.map((item) => (item.key === updatedRecord.key ? updatedRecord : item)))
+          setIsDetailModalVisible(false)
+          setIsEditing(false)
+          message.success('修改已保存')
+        }
+      })
+    }).catch((errorInfo) => {
+      console.log('Failed:', errorInfo)
+    })
   }
 
   const handleTestConnection = () => {
-    form.validateFields(['dbType', 'dbHost', 'dbPort', 'dbName', 'dbUser', 'dbPassword'])
+    dbForm.validateFields(['dbType', 'dbHost', 'dbPort', 'dbName', 'dbUser', 'dbPassword'])
       .then(values => {
         // Mock test connection logic
         message.success('数据库连接成功')
@@ -138,9 +140,6 @@ const PdfPage = () => {
         message.error('数据库连接失败，请检查配置信息')
       })
   }
-
-  const [form] = Form.useForm()
-  const [dbForm] = Form.useForm()
 
   const renderContentFields = () => {
     if (!currentRecord) return null
@@ -152,7 +151,10 @@ const PdfPage = () => {
         label={key.charAt(0).toUpperCase() + key.slice(1)}
         rules={[{ required: true, message: `Please input ${key}!` }]}
       >
-        <Input.TextArea defaultValue={currentRecord.content[key]} readOnly />
+        <Input.TextArea
+          defaultValue={currentRecord.content[key]}
+          readOnly={!isEditing}
+        />
       </Form.Item>
     ))
   }
@@ -161,7 +163,6 @@ const PdfPage = () => {
     dbForm.validateFields()
       .then(values => {
         // Handle database configuration submission here
-        // console.log('Database config:', values)
         const hide = message.loading('正在落表...', 0)
         setTimeout(() => {
           hide()
@@ -178,8 +179,7 @@ const PdfPage = () => {
   const handleConfirm = () => {
     if (info.length === 0) {
       message.error("暂无数据")
-    }
-    else {
+    } else {
       setIsDbModalVisible(true)
     }
   }
@@ -208,16 +208,6 @@ const PdfPage = () => {
           </Row>
           <Row gutter={16} style={{ borderRadius: '3px' }}>
             <Col>
-              <Select
-                placeholder="选择报告类型"
-                style={{ width: '200px' }}
-                onChange={setReportType}
-              >
-                <Option value="CT">CT检查报告单</Option>
-                <Option value="MR">MR检查报告单</Option>
-              </Select>
-            </Col>
-            <Col>
               <Spin spinning={loading}>
                 <Button onClick={handleParse}>
                   OCR解析
@@ -232,7 +222,7 @@ const PdfPage = () => {
                   title={record.name}
                   extra={<Button type='link' onClick={() => showDetailModal(record)}>查看详情</Button>}
                 >
-                  <p>类型: {record.type}</p>
+                  <p>类型: {record.content.type}</p>
                 </Card>
               </Col>
             ))}
@@ -301,9 +291,25 @@ const PdfPage = () => {
           title="Detail Record"
           open={isDetailModalVisible}
           onCancel={handleDetailCancel}
-          footer={null}
+          onOk={handleSaveChanges}
+          footer={[
+            <Button key="back" onClick={handleDetailCancel}>
+              取消
+            </Button>,
+            <Button
+              key="edit"
+              type="primary"
+              onClick={() => setIsEditing(true)}
+              disabled={isEditing}
+            >
+              编辑
+            </Button>,
+            <Button key="save" type="primary" onClick={handleSaveChanges} disabled={!isEditing}>
+              保存
+            </Button>,
+          ]}
         >
-          <Form layout="vertical">
+          <Form form={form} layout="vertical">
             {renderContentFields()}
           </Form>
         </Modal>
