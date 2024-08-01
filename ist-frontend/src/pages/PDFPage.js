@@ -74,12 +74,16 @@ const PdfPage = () => {
         console.log(response)
         let tmp = []
         for (let i = 0; i < response.results.length; i++) {
+          const content = response.results[i]
+          const isTable = Array.isArray(content.tables_json)
           tmp.push({
             "key": i,
             "name": fileList[i].originFileObj.name,
-            "content": response.results[i]
+            "content": content,
+            "isTable": isTable ? 'table' : 'structured'
           })
         }
+        console.log(tmp)
         setInfo(tmp)
         message.success('解析成功')
       }
@@ -143,20 +147,40 @@ const PdfPage = () => {
 
   const renderContentFields = () => {
     if (!currentRecord) return null
-
-    return Object.keys(currentRecord.content).map(key => (
-      <Form.Item
-        key={key}
-        name={['content', key]}
-        label={key.charAt(0).toUpperCase() + key.slice(1)}
-        rules={[{ required: true, message: `Please input ${key}!` }]}
-      >
-        <Input.TextArea
-          defaultValue={currentRecord.content[key]}
-          readOnly={!isEditing}
-        />
-      </Form.Item>
-    ))
+    if (currentRecord.isTable === 'table') {
+      return (
+        <>
+          {currentRecord.content.tables_json.map((table, tableIndex) => (
+            <div key={tableIndex} style={{ marginBottom: '20px' }}>
+              <h3>Table {table.table_number}</h3>
+              {table.data.map((row, rowIndex) => (
+                <Form.Item key={rowIndex} label={`Row ${rowIndex + 1}`}>
+                  <Input.TextArea
+                    value={JSON.stringify(row, null, 2)} // Format JSON with indentation
+                    readOnly
+                  />
+                </Form.Item>
+              ))}
+            </div>
+          ))}
+        </>
+      )
+    }
+    else {
+      return Object.keys(currentRecord.content).map(key => (
+        <Form.Item
+          key={key}
+          name={['content', key]}
+          label={key.charAt(0).toUpperCase() + key.slice(1)}
+          rules={[{ required: true, message: `Please input ${key}!` }]}
+        >
+          <Input.TextArea
+            defaultValue={currentRecord.content[key]}
+            readOnly={!isEditing}
+          />
+        </Form.Item>
+      ))
+    }
   }
 
   const handleDbSubmit = () => {
