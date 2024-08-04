@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Upload, Button, Select, Card, Form, Input, Modal, Layout, Space, Row, Col, message, Spin } from 'antd'
+import { Upload, Button, Select, Card, Form, Input, Modal, Layout, Space, Row, Col, message, Spin, Table } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { submitFile, ocr } from '../service/file'
 
@@ -121,8 +121,15 @@ const PdfPage = () => {
         title: '确认保存修改?',
         content: '您确认要保存这些修改吗？',
         onOk: () => {
-          // 模拟保存的逻辑
-          const updatedRecord = { ...currentRecord, content: values.content }
+          // 更新 currentRecord 和 info 中的数据
+          const updatedRecord = {
+            ...currentRecord,
+            content: {
+              ...currentRecord.content,
+              ...values.content
+            }
+          }
+          setCurrentRecord(updatedRecord)
           setInfo((prevInfo) => prevInfo.map((item) => (item.key === updatedRecord.key ? updatedRecord : item)))
           setIsDetailModalVisible(false)
           setIsEditing(false)
@@ -150,18 +157,70 @@ const PdfPage = () => {
     if (currentRecord.isTable === 'table') {
       return (
         <>
-          {currentRecord.content.tables_json.map((table, tableIndex) => (
-            <div key={tableIndex} style={{ marginBottom: '20px' }}>
-              <h3>Table {table.table_number}</h3>
-              {table.data.map((row, rowIndex) => (
-                <Form.Item key={rowIndex} label={`Row ${rowIndex + 1}`}>
+          {currentRecord.content.tables_json.map((table, tableIndex) => {
+            // 生成列定义
+            const columns = Object.keys(table.data[0] || {}).map((header, headerIndex) => ({
+              title: header,
+              dataIndex: header,
+              key: headerIndex,
+            }))
+
+            // 生成表格数据
+            const dataSource = table.data.map((row, rowIndex) => ({
+              key: rowIndex,
+              ...row,
+            }))
+
+            return (
+              <div key={tableIndex} style={{ marginBottom: '20px' }}>
+                <h3>Table {table.table_number}</h3>
+                <Table columns={columns} dataSource={dataSource} pagination={false} />
+                <Form.Item
+                  label={`Table ${table.table_number} JSON Data`}
+                  key={`table-json-${tableIndex}`}
+                >
                   <Input.TextArea
-                    value={JSON.stringify(row, null, 2)} // Format JSON with indentation
-                    readOnly
+                    rows={8}
+                    value={JSON.stringify(table, null, 2)} // 格式化 JSON 数据
+                    onChange={(e) => {
+                      // 处理 JSON 数据的变化（解析并更新 currentRecord）
+                      try {
+                        const newTableData = JSON.parse(e.target.value)
+                        setCurrentRecord((prevRecord) => {
+                          const updatedTablesJson = [...prevRecord.content.tables_json]
+                          updatedTablesJson[tableIndex] = newTableData
+                          return {
+                            ...prevRecord,
+                            content: {
+                              ...prevRecord.content,
+                              tables_json: updatedTablesJson,
+                            },
+                          }
+                        })
+                      } catch (err) {
+                        console.error("Invalid JSON", err)
+                      }
+                    }}
+                    readOnly={!isEditing}
                   />
                 </Form.Item>
-              ))}
-            </div>
+              </div>
+            )
+          })}
+          {Object.keys(currentRecord.content).map((key) => (
+            key === 'tables_json' ? null : (
+              <Form.Item
+                key={key}
+                name={['content', key]}
+                label={key.charAt(0).toUpperCase() + key.slice(1)}
+                rules={[{ required: true, message: `Please input ${key}!` }]}
+              >
+                <Input.TextArea
+                  defaultValue={currentRecord.content[key]}
+                  readOnly={!isEditing}
+                />
+              </Form.Item>
+            )
           ))}
         </>
       )
@@ -247,6 +306,9 @@ const PdfPage = () => {
                   extra={<Button type='link' onClick={() => showDetailModal(record)}>查看详情</Button>}
                 >
                   <p>类型: {record.content.type}</p>
+                  <p>姓名：{record.content.name}</p>
+                  <p>性别：{record.content.gender}</p>
+                  <p>年龄：{record.content.age}</p>
                 </Card>
               </Col>
             ))}
@@ -316,6 +378,7 @@ const PdfPage = () => {
           open={isDetailModalVisible}
           onCancel={handleDetailCancel}
           onOk={handleSaveChanges}
+          width={800}
           footer={[
             <Button key="back" onClick={handleDetailCancel}>
               取消
