@@ -19,6 +19,7 @@ import DataDictionaryManagePage from "../pages/data-dictionary/DataDictionaryMan
 import ResourceCatalogPage from "../pages/data-model/ResourceCatalog/ResourceCatalogPage";
 import DataModelDetailPage from "../pages/data-model/DataModel/DataModelDetailPage";
 import DataModelPage from "../pages/data-model/DataModel/DataModelPage";
+import DataStatisticsDiyPage from "../pages/data-statistics/DataStatisticsDiyPage";
 
 const routes = [
     {
@@ -99,6 +100,14 @@ const routes = [
         label: '资产统计',
         meta: {
           icon: <LineChartOutlined />
+        }
+      },
+      {
+        path: '/diy',
+        component: <DataStatisticsDiyPage/>,
+        label: '自定义统计',
+        meta: {
+          icon: <DotChartOutlined/>
         }
       }
     ]
