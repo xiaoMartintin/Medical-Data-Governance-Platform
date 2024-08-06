@@ -83,7 +83,7 @@ const PieChart = ( {seriesData} ) => {
             window.removeEventListener('resize', handleResize);
         };
 
-    }, []);
+    }, [seriesData]);
 
 
     return (
