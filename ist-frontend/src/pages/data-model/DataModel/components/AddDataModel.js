@@ -6,6 +6,7 @@ import {ReloadOutlined} from '@ant-design/icons';
 import config from '../config';
 import {addDataModel, querySimilarTags} from '../../../../apis/DataModelingApi';
 import {formatVariableType, formatRuleType, formatRuleDetail} from '../methods';
+import {mockData} from "../../../../apis/mockData_";
 
 const {Step} = Steps
 const {Option} = Select
@@ -152,6 +153,18 @@ const AddDataModel = ({visible, onHideModal, onAddModel}) => {
                 message.error('请输入至少一个字段')
             }
         } else if (currentStep === 3) {
+            if (!localStorage.getItem("mockData")){
+                localStorage.setItem("mockData",JSON.stringify(mockData));
+                console.log('mockData已经加载到localStorage中')
+            }
+            let newMockData_ = JSON.parse(localStorage.getItem("mockData"));
+            let newModels = newMockData_.models;
+            const models_len = newModels.length;
+            const newModel = {...form,id:models_len}
+            newModels.push(newModel);
+            newMockData_.models = newModels
+            localStorage.setItem("mockData",JSON.stringify(newMockData_))
+
             const loading = message.loading('正在添加数据模型...')
             addDataModel({...form, tag: tags}).then(_ => {
                 resetModal()
