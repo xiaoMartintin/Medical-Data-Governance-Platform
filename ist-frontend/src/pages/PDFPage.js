@@ -302,13 +302,11 @@ const PdfPage = () => {
             {info.map(record => (
               <Col key={record.key} span={8}>
                 <Card
-                  title={record.name}
+                  title={record.content.pdf_name}
                   extra={<Button type='link' onClick={() => showDetailModal(record)}>查看详情</Button>}
                 >
                   <p>类型: {record.content.type}</p>
                   <p>姓名：{record.content.name}</p>
-                  <p>性别：{record.content.gender}</p>
-                  <p>年龄：{record.content.age}</p>
                 </Card>
               </Col>
             ))}
