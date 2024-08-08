@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import {value} from "lodash/seq";
+import { v4 as uuidv4 } from 'uuid';
 
 const BarChart = ({ dataSource, text}) => {
     const chartInstanceRef = useRef(null);
+    const id = useRef(uuidv4());
 
     const resizeChart = () => {
         if (chartInstanceRef.current) {
@@ -26,7 +28,7 @@ const BarChart = ({ dataSource, text}) => {
             title: { text, x: 'center' }
         };
 
-        const chartInstance = echarts.init(document.getElementById('bar-chart'));
+        const chartInstance = echarts.init(document.getElementById(id.current));
         chartInstance.setOption(option);
 
         const handleResize = () => {
@@ -45,7 +47,7 @@ const BarChart = ({ dataSource, text}) => {
         };
     }, [dataSource, text]);
 
-    return <div id="bar-chart" style={{ width: '100%', height: '400px' }}></div>;
+    return <div id={id.current} style={{ width: '100%', height: '400px' }}></div>;
 };
 
 export default BarChart;
