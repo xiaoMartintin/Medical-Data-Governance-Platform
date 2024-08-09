@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PieChart from "./PieChart";
 import BarChart from "./BarChart";
 import RankingChart from "./RankingChart";
-import {Card, Select} from 'antd';
+import {Card, Divider, Select} from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 
 const { Option } = Select;
@@ -73,7 +73,7 @@ const DataStatisticsDiyCard = () => {
     // const dataSources = getPieChartSeriesDataV2(diseaseStudies)
 
     return (
-        <Card style={{width: '100%', height: '98%'}}>
+        {/*<Card style={{width: '100%', height: '98%'}}>
             <div>
                 <Select onChange={handleComponentChange} style={{width: '50%'}} placeholder={'请选择组件'}>
                     {components.map((component, index) => (
@@ -106,7 +106,50 @@ const DataStatisticsDiyCard = () => {
                     return <Component key={index} seriesData={dataSource} dataSource={dataSource}/>;
                 })}
             </div>
-        </Card>
+        </Card>*/},
+    <Card style={{
+        minHeight: 300,
+        padding: '15px 15px',
+        margin: '12px 100px 12px 0',
+        width: '40%',
+        borderRadius: 15,
+        borderStyle: "solid",
+        borderColor: "dimgrey"}}>
+        <div>
+            <Select onChange={handleComponentChange} style={{width: '25%', marginLeft:20}} placeholder={'请选择组件'}>
+                {components.map((component, index) => (
+                    <Option key={index} value={component.value}>{component.value}</Option>
+                ))}
+            </Select>
+
+            <Select onChange={handleDataSourceChange} style={{width:'25%',marginLeft:20}}>
+                {MockDIYData.map((dataSource, index) => (
+                    <Option key={index} value={dataSource.name}>{dataSource.name}</Option>
+                ))}
+            </Select>
+
+            <Select onChange={handleFieldChange} style={{width:'25%',marginLeft:20}} value={selectedField}>
+                {selectedDataSources.length &&
+                    Object.keys(selectedDataSources[0]).filter(key => typeof selectedDataSources[0][key] === 'number').map((field, index) => (
+                        <Option key={index} value={field}>{field}</Option>
+                    ))}
+            </Select>
+
+            <Divider/>
+
+            {selectedDataSources.length > 0 && selectedField &&
+                selectedComponents.map((selectedComponent, index) => {
+                    const Component = components.find(component => component.value === selectedComponent).component;
+
+                    const dataSource = selectedDataSources.map(item => ({
+                        ...item,
+                        value: item[selectedField],
+                    }));
+
+                    return <Component key={index} seriesData={dataSource} dataSource={dataSource}/>;
+                })}
+        </div>
+    </Card>
     );
 };
 
