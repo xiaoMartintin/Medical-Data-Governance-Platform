@@ -8,7 +8,7 @@ import {
   ShareAltOutlined,
   BookOutlined,
   EyeOutlined, EditOutlined,
-  MoneyCollectOutlined, RobotOutlined, SearchOutlined
+  MoneyCollectOutlined, RobotOutlined, SearchOutlined, InsuranceOutlined
 } from '@ant-design/icons'
 import DataAssetPage from "../pages/data-asset/DataAssetPage";
 import DataMapPage from "../pages/data-map/DataMapPage";
@@ -20,6 +20,7 @@ import ResourceCatalogPage from "../pages/data-model/ResourceCatalog/ResourceCat
 import DataModelDetailPage from "../pages/data-model/DataModel/DataModelDetailPage";
 import DataModelPage from "../pages/data-model/DataModel/DataModelPage";
 import DataStatisticsDiyPage from "../pages/data-statistics/DataStatisticsDiyPage";
+import DataMaskingPage from "../pages/data-masking/DataMaskingPage";
 
 const routes = [
     {
@@ -92,6 +93,14 @@ const routes = [
         label: '资产地图',
         meta: {
           icon: <ShareAltOutlined/>
+        }
+      },
+      {
+        path: '/masking',
+        component: <DataMaskingPage/>,
+        label: '数据脱敏',
+        meta: {
+          icon: <InsuranceOutlined />
         }
       },
       {
