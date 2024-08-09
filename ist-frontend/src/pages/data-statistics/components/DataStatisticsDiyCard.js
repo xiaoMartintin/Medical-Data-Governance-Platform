@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import PieChart from "./PieChart";
 import BarChart from "./BarChart";
 import RankingChart from "./RankingChart";
-import {Card, Divider, Select} from 'antd';
+import {Button, Card, Divider, Select} from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 
 const { Option } = Select;
@@ -25,11 +25,25 @@ const MockDIYData2 = [
 
 const MockDIYData = [{data: MockDIYData1, name: 'MockData1'}, {data: MockDIYData2, name: 'MockData2'}]
 
-const DataStatisticsDiyCard = () => {
-    const [selectedComponents, setSelectedComponents] = useState([]);
-    const [selectedDataSources, setSelectedDataSources] = useState([]);
-    const [selectedField, setSelectedField] = useState(null);
+const DataStatisticsDiyCard = ({onDelete, id}) => {
+    const initialCardData = JSON.parse(localStorage.getItem(`card-${id}`)) || {};
+
+    const [selectedComponents, setSelectedComponents] = useState(initialCardData.selectedComponents || []);
+    const [selectedDataSources, setSelectedDataSources] = useState(initialCardData.selectedDataSources || []);
+    const [selectedField, setSelectedField] = useState(initialCardData.selectedField || null);
+    const [selectedModelName, setSelectedModelName] = useState(initialCardData.selectedModelName || null);
     // const [numericFields, setNumericFields] = useState([]);
+
+    useEffect(() => {
+        const cardData = {
+            selectedComponents,
+            selectedDataSources,
+            selectedField,
+            selectedModelName,
+        };
+
+        localStorage.setItem(`card-${id}`, JSON.stringify(cardData));
+    }, [selectedComponents, selectedDataSources, selectedField]);
 
     const handleComponentChange = value => {
         console.log(value);
@@ -40,16 +54,26 @@ const DataStatisticsDiyCard = () => {
         setSelectedField(null);
         console.log('selected data source:', MockDIYData.find(dataSource => dataSource.name === value).data);
         setSelectedDataSources(MockDIYData.find(dataSource => dataSource.name === value).data);
-
-        // const firstItem = selectedDataSources[0];
-        // console.log('firstItem:', firstItem)
-        // const fields = Object.keys(firstItem).filter(key => typeof firstItem[key] === 'number');
-        // setNumericFields(fields);
+        setSelectedModelName(value);
     };
 
     const handleFieldChange = value => {
         setSelectedField(value);
     };
+
+    const getComponentTitleText = () => {
+        if (selectedComponents.length === 0 || selectedDataSources.length === 0 || !selectedField) {
+            return "";
+        }
+
+        const component = (
+            ("PieChart" === selectedComponents[0]) ? "饼状图"
+            : ("BarChart" === selectedComponents[0]) ? "柱状图"
+            : "排行榜"
+        );
+
+        return `${selectedField}${component} - ${selectedModelName}`;
+    }
 
     const components = [
         { value: 'PieChart', component: PieChart },
@@ -108,27 +132,29 @@ const DataStatisticsDiyCard = () => {
             </div>
         </Card>*/},
     <Card style={{
-        minHeight: 300,
+        minHeight: 500,
         padding: '15px 15px',
         margin: '12px 100px 12px 0',
         width: '40%',
         borderRadius: 15,
         borderStyle: "solid",
-        borderColor: "dimgrey"}}>
+        borderColor: "light"
+        }}
+    >
         <div>
-            <Select onChange={handleComponentChange} style={{width: '25%', marginLeft:20}} placeholder={'请选择组件'}>
+            <Select onChange={handleComponentChange} style={{width: '32%'}} value={selectedComponents[0]} placeholder={'请选择组件'}>
                 {components.map((component, index) => (
                     <Option key={index} value={component.value}>{component.value}</Option>
                 ))}
             </Select>
 
-            <Select onChange={handleDataSourceChange} style={{width:'25%',marginLeft:20}}>
+            <Select onChange={handleDataSourceChange} style={{width: '32%', marginLeft: 5}} value={selectedModelName} placeholder={'请选择数据模型'}>
                 {MockDIYData.map((dataSource, index) => (
                     <Option key={index} value={dataSource.name}>{dataSource.name}</Option>
                 ))}
             </Select>
 
-            <Select onChange={handleFieldChange} style={{width:'25%',marginLeft:20}} value={selectedField}>
+            <Select onChange={handleFieldChange} style={{width: '32%', marginLeft: 5}} value={selectedField} placeholder={'请选择字段'}>
                 {selectedDataSources.length &&
                     Object.keys(selectedDataSources[0]).filter(key => typeof selectedDataSources[0][key] === 'number').map((field, index) => (
                         <Option key={index} value={field}>{field}</Option>
@@ -146,8 +172,23 @@ const DataStatisticsDiyCard = () => {
                         value: item[selectedField],
                     }));
 
-                    return <Component key={index} seriesData={dataSource} dataSource={dataSource}/>;
-                })}
+                    return (
+                        <div>
+                            <Component
+                                key={index}
+                                seriesData={dataSource}
+                                dataSource={dataSource}
+                                text={getComponentTitleText()}
+                            />
+                            <Divider/>
+                        </div>
+                    )
+                })
+            }
+
+
+            <Button danger onClick={() => onDelete(id)} style={{position: 'absolute', right: '7%', bottom: '3%'}}>删除卡片</Button>
+
         </div>
     </Card>
     );

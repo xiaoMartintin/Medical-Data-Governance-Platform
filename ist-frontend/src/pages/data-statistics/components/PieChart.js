@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import * as echarts from 'echarts';
 import { v4 as uuidv4 } from 'uuid';
 
-const PieChart = ( {seriesData} ) => {
+const PieChart = ( {seriesData, text} ) => {
     const chartRef = useRef(null);
     const chartInstanceRef = useRef(null);
     const id = useRef(uuidv4());
@@ -16,7 +16,7 @@ const PieChart = ( {seriesData} ) => {
         const chart = echarts.init(document.getElementById(id.current));
         const option = {
             title: {
-                text: '饼状图',
+                text: text,
                 left: 'center'
             },
             tooltip: {

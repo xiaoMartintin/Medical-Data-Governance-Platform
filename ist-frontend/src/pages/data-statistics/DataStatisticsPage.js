@@ -273,13 +273,13 @@ class DataStatisticsPage extends React.Component{
                 <div className="Main_Container" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
                     <div className="Top_Container" style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
                         <div style={{ flex: 1, margin: '0 10px'  }}>
-                            <PieChart seriesData={this.state.PieChart_Series[0].data}/>
+                            <PieChart seriesData={this.state.PieChart_Series[0].data} text="饼状图"/>
                         </div>
                         <div style={{ flex: 1, margin: '0 10px' }}>
                             <BarChart dataSource={this.state.PieChart_Series[0].data} text="条形图"/>
                         </div>
                         <div style={{ flex: 1, margin: '0 20px'  }}>
-                            <RankingChart dataSource={this.state.PieChart_Series[0].data}/>
+                            <RankingChart dataSource={this.state.PieChart_Series[0].data} text="排行榜"/>
                         </div>
                     </div>
                     <Divider/>

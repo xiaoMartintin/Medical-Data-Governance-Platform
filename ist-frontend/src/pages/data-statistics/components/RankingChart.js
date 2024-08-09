@@ -20,9 +20,9 @@ const columns = [
     }
 ];
 
-const RankingChart = ({dataSource}) => (
+const RankingChart = ({dataSource, text}) => (
     <div className="ranking-container" style={{ width: '100%', height: '400px'}}>
-        <text>排行榜</text>
+        <text>{text}</text>
         <div style={{overflow:'auto', height:'350px'}}>
         <Table columns={columns}  dataSource={dataSource.sort((a, b) => b.value - a.value)} pagination={false}/>
         </div>
