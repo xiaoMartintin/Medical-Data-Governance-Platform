@@ -1,7 +1,28 @@
 import React, {useEffect, useState} from "react";
 import {PlusOutlined} from "@ant-design/icons";
-import {Button, Divider, Table} from "antd";
+import {Button, Divider, Table, Tag} from "antd";
 import AddDataMaskingTask from "./components/AddDataMaskingTask";
+
+const configs = [
+    {
+        value:"1",
+        color:"magenta",
+        text:"定时+人工",
+
+    },
+    {
+        value:"2",
+        color:"lime",
+        text:"定时",
+
+    },
+    {
+        value:"3",
+        color:"geekblue",
+        text:"人工",
+
+    }
+]
 
 const columns = [
     {
@@ -27,7 +48,14 @@ const columns = [
     {
         title: '执行方式',
         dataIndex: 'config',
-        align: "center"
+        align: "center",
+        render: record => (
+            <>
+                {
+                    <Tag color={configs.find(item => item.value === record).color}>{configs.find(item => item.value === record).text}</Tag>
+                }
+            </>
+        )
     },
     {
         title: '源资产',

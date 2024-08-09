@@ -164,7 +164,7 @@ const AddDataMaskingTask = ({visible, onHideModal, onAddModel}) => {
             const now = new Date();
             const isoString = now.toISOString();
             const timestamp = isoString.replace('Z', '+00:00');
-            let new_maskingConfig =  {...form,id:id,timestamp:timestamp,fail:0,new:0,progress:0,state:0}
+            let new_maskingConfig =  {...form,id:id,timestamp:timestamp,fail:0,new:0,progress:0,state:0,times:0}
             let new_maskingConfigs = JSON.parse(localStorage.getItem("maskingConfigs"));
             new_maskingConfigs.push(new_maskingConfig)
             localStorage.setItem("maskingConfigs",JSON.stringify(new_maskingConfigs))
